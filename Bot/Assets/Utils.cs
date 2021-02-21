@@ -14,7 +14,6 @@ public class Utils
         Func<(float, float), (float,float)> rotate = coord => (coord.Item1 * cos_theta - coord.Item2 * sin_theta, coord.Item1 * sin_theta + coord.Item2 * cos_theta);
         (float, float) first = (0, size);
         List<(float, float)> verts = new List<(float, float)>{ (0,0), first };
-
         List<(int, int, int)> tInd = new List<(int, int, int)>();
         (float, float) previous = first;
         for (int i = 1; i < n; i++)
@@ -96,5 +95,5 @@ public class Utils
         return x >= 0 && y >= 0 && z >= 0;
     }
     
-
+    
 }
