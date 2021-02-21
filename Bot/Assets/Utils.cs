@@ -94,6 +94,16 @@ public class Utils
         float z = line_implicit_equation(C, A)(P);
         return x >= 0 && y >= 0 && z >= 0;
     }
-    
-    
+
+    public (float, float, float) barycentric_coordinates((float, float) P, (float, float) A, (float, float) B, (float, float) C)
+    {
+        Func<(float, float), float> ab_line = line_implicit_equation(A, B);
+        float gamma = ab_line(P) / ab_line(C);
+        Func<(float, float), float> ca_line = line_implicit_equation(C, A);
+        float beta = ca_line(P) / ca_line(B);
+        Func<(float, float), float> bc_line = line_implicit_equation(B, C);
+        float alpha = bc_line(P) / bc_line(A);
+        return (alpha, beta, gamma);
+    }
+
 }
