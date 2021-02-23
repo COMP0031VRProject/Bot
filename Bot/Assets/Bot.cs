@@ -18,6 +18,10 @@ public class Bot : MonoBehaviour
         for (int i = flags.Length - 1; i > 0; i--)
         {
             int rand_i = rnd.Next(i + 1);
+            if (rand_i == flags.Length - 1) {
+                //Prevent case where there's two consecutive flags chosen
+                rand_i = 0;
+            }
             Transform temp = flags[i];
             flags[i] = flags[rand_i];
             flags[rand_i] = temp;
@@ -39,12 +43,13 @@ public class Bot : MonoBehaviour
         speed_scale = 1;
         if (dist < 0.5f)
         {
-            prev_pos = flags[flag_i].position;
+            prev_pos = transform.position;
             IncreaseIndex();
+            
         }
-        if (dist < 1.4f || prev_dist < 1.4f)
+        if (dist < 1.4f || prev_dist < 0.9f)
         {
-            speed_scale = Mathf.Min(dist, prev_dist) - 0.4f;
+            speed_scale = Mathf.Min(dist, prev_dist + 0.5f) - 0.4f;
         }
         
         Move(speed_scale);
