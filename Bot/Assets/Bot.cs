@@ -46,7 +46,8 @@ public class Bot : MonoBehaviour
         {
             speed_scale = Mathf.Min(dist, prev_dist) - 0.4f;
         }
-        
+
+
         Move(speed_scale);
     }
 

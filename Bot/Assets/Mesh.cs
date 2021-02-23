@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Mesh
 {
-    public List<(float, float)> verts;
+    public List<(double, double)> verts;
     public List<(int, int, int)> tInd;
-    public Mesh(List<(float, float)> verts, List<(int, int, int)> tInd)
+    public Mesh(List<(double, double)> verts, List<(int, int, int)> tInd)
     {
         this.verts = verts;
         this.tInd = tInd;
