@@ -22,12 +22,13 @@ public class Teleport : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSecondsRealtime(delayInSeconds);
             pos_i += 1;
             if (pos_i >= points.Length)
             {
                 pos_i = 0;
             }
+            transform.LookAt(points[pos_i]); //Look at next point first
+            yield return new WaitForSecondsRealtime(delayInSeconds);
             transform.position = points[pos_i];
         }
     }
