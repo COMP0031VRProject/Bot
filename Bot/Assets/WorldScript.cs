@@ -61,7 +61,7 @@ public class WorldScript : MonoBehaviour
                 vA = virtualMesh.verts[t1];
                 vB = virtualMesh.verts[t2];
                 vC = virtualMesh.verts[t3];
-                Debug.Log(vA);
+                //Debug.Log(vA);
                 //Debug.Log(alpha);
                 //Debug.Log(beta);
                 //Debug.Log(gamma);
