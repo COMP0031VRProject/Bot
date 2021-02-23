@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class Mesh
 {
-    public object verts;
-    public object tInd;
-    public Mesh(object verts, object tInd)
+    public List<(float, float)> verts;
+    public List<(int, int, int)> tInd;
+    public Mesh(List<(float, float)> verts, List<(int, int, int)> tInd)
     {
         this.verts = verts;
         this.tInd = tInd;
     }
-
-
 }

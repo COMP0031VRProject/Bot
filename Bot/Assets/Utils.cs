@@ -5,8 +5,9 @@ using UnityEngine;
 
 public class Utils
 {
+    
     public Mesh generate_polygon_mesh(int n, int size, (int x, int y) center)
-    { 
+    {
         float theta = 2 * Mathf.PI/n;
         float sin_theta = Mathf.Sin(theta);
         float cos_theta = Mathf.Cos(theta);
