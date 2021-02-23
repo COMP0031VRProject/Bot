@@ -20,48 +20,60 @@ public class WorldScript : MonoBehaviour
 
     void Update()
     {
-        (double x, double z) = real2Virtual(realbot);
-        virtualbot.position = new Vector3((float)x,0.5f,(float)z);
-        //Debug.Log("x: " + x);
-        //Debug.Log("z: " + z);
+        (decimal x, decimal z) = virtual2Real(virtualbot);
+        if (x != 0 | z!= 0)
+        {
+            realbot.position = new Vector3((float)x, 0.5f, (float)z);
+        }
+        //virtualbot.position = realbot.position;
+        Debug.Log("x: " + (float)x);
+        Debug.Log("z: " + (float)z);
+        //Debug.Log(realbot.position.x);
     }
 
     void simulate()
     {
         Utils util = new Utils();
         virtualMesh = util.generate_embedded_polygon_mesh(20, 5, 2, (0, 0));
-        realMesh = virtualMesh;
-        (double, double) center = realMesh.verts[0];
+        realMesh = util.generate_embedded_polygon_mesh(20, 5, 2, (0, 0));
+        (decimal, decimal) center = realMesh.verts[0];
         int k = 2;
         for (int i = 0; i < realMesh.verts.Count; i++)
         {
-            double x = (realMesh.verts[i].Item1 - center.Item1) / (k + center.Item1);
-            double y = (realMesh.verts[i].Item2 - center.Item2) / (k + center.Item2);
+            decimal x = (realMesh.verts[i].Item1 - center.Item1) / (k + center.Item1);
+            decimal y = (realMesh.verts[i].Item2 - center.Item2) / (k + center.Item2);
             realMesh.verts[i] = (x, y);
         }
+
+        Debug.Log(realMesh.verts[10]);
+        Debug.Log(virtualMesh.verts[10]);
+
+        
     }
 
-    (double, double) real2Virtual(Transform pos)
+    (decimal, decimal) real2Virtual(Transform pos)
     {
+
         Utils util = new Utils();
-        (double, double) P = (pos.position.x, pos.position.z);
-        double i1, i2;
+        (decimal, decimal) P = ((decimal)pos.position.x, (decimal)pos.position.z);
+        decimal i1, i2;
+        //Debug.Log(realMesh.tInd.Count);
         foreach ((int t1, int t2, int t3) in realMesh.tInd)
         {
-            (double, double) A, B, C;
-            A = virtualMesh.verts[t1];
-            B = virtualMesh.verts[t2];
-            C = virtualMesh.verts[t3];
-            //Debug.Log(A);
+            (decimal, decimal) A, B, C;
+            A = realMesh.verts[t1];
+            B = realMesh.verts[t2];
+            C = realMesh.verts[t3];
+            
 
             if (util.is_point_in_triangle(P, A, B, C))
             {
-                (double alpha, double beta, double gamma) = util.barycentric_coordinates(P, A, B, C);
-                (double, double) vA, vB, vC;
+                (decimal alpha, decimal beta, decimal gamma) = util.barycentric_coordinates(P, A, B, C);
+                (decimal, decimal) vA, vB, vC;
                 vA = virtualMesh.verts[t1];
                 vB = virtualMesh.verts[t2];
                 vC = virtualMesh.verts[t3];
-                //Debug.Log(vA);
+                //Debug.Log(vB);
                 //Debug.Log(alpha);
                 //Debug.Log(beta);
                 //Debug.Log(gamma);
@@ -90,21 +102,21 @@ public class WorldScript : MonoBehaviour
         return (0,0);
     }
 
-    (double, double) virtual2Real(Transform pos)
+    (decimal, decimal) virtual2Real(Transform pos)
     {
         Utils util = new Utils();
-        (double, double) P = (pos.position.x, pos.position.z);
+        (decimal, decimal) P = ((decimal)pos.position.x, (decimal)pos.position.z);
         foreach ((int t1, int t2, int t3) in virtualMesh.tInd)
         {
-            (double, double) A, B, C;
+            (decimal, decimal) A, B, C;
             A = virtualMesh.verts[t1];
             B = virtualMesh.verts[t2];
             C = virtualMesh.verts[t3];
 
             if(util.is_point_in_triangle(P, A, B, C))
             {
-                (double alpha, double beta, double gamma) = util.barycentric_coordinates(P, A, B, C);
-                (double, double) vA, vB, vC;
+                (decimal alpha, decimal beta, decimal gamma) = util.barycentric_coordinates(P, A, B, C);
+                (decimal, decimal) vA, vB, vC;
                 vA = realMesh.verts[t1];
                 vB = realMesh.verts[t2];
                 vC = realMesh.verts[t3];
@@ -116,8 +128,8 @@ public class WorldScript : MonoBehaviour
                 vC.Item1 = vC.Item1 * gamma;
                 vC.Item2 = vC.Item2 * gamma;
 
-                double i1 = vA.Item1 + vB.Item1 + vC.Item1;
-                double i2 = vA.Item2 + vB.Item2 + vC.Item2;
+                decimal i1 = vA.Item1 + vB.Item1 + vC.Item1;
+                decimal i2 = vA.Item2 + vB.Item2 + vC.Item2;
                
                 return (i1, i2);
             }
