@@ -61,7 +61,7 @@ public class Utils
         for (int i = 1; i < n; i++)
         {
             int last = verts.Count - 1;
-            (decimal, decimal)next_v = (verts[i + 1].Item2 * M, verts[i + 1].Item2* M);
+            (decimal, decimal)next_v = (verts[i + 1].Item1 * M, verts[i + 1].Item2* M);
             verts.Add(next_v);
             tInd.Add((i, last, last + 1));
             tInd.Add((i, last + 1, i + 1));
@@ -90,9 +90,11 @@ public class Utils
 
     public bool is_point_in_triangle((decimal,decimal) P, (decimal,decimal) A, (decimal,decimal) B, (decimal,decimal) C)
     {
-        decimal x = line_implicit_equation(A, B)(P);
-        decimal y = line_implicit_equation(B, C)(P);
-        decimal z = line_implicit_equation(C, A)(P);
+        float x = (float)line_implicit_equation(A, B)(P);
+        float y = (float)line_implicit_equation(B, C)(P);
+        float z = (float)line_implicit_equation(C, A)(P);
+
+
         return x >= 0 && y >= 0 && z >= 0;
     }
 

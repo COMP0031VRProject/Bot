@@ -8,6 +8,12 @@ public class WorldScript : MonoBehaviour
     public Mesh realMesh;
     public Transform virtualbot;
     public Transform realbot;
+    public bool homogenous;
+    public bool polygon_manipulation;
+    public bool lattice_crushing;
+    public int n;
+    public int size;
+    public int scale;
 
 
 
@@ -18,7 +24,7 @@ public class WorldScript : MonoBehaviour
 
     }
 
-    void Update()
+    void FixedUpdate()
     {
         (decimal x, decimal z) = virtual2Real(virtualbot);
         if (x != 0 | z!= 0)
@@ -26,28 +32,36 @@ public class WorldScript : MonoBehaviour
             realbot.position = new Vector3((float)x, 0.5f, (float)z);
         }
         //virtualbot.position = realbot.position;
-        Debug.Log("x: " + (float)x);
-        Debug.Log("z: " + (float)z);
+        //Debug.Log("x: " + (float)x);
+        //Debug.Log("z: " + (float)z);
         //Debug.Log(realbot.position.x);
     }
 
     void simulate()
     {
         Utils util = new Utils();
+
         virtualMesh = util.generate_embedded_polygon_mesh(20, 5, 2, (0, 0));
         realMesh = util.generate_embedded_polygon_mesh(20, 5, 2, (0, 0));
+
+
         (decimal, decimal) center = realMesh.verts[0];
-        int k = 2;
+
         for (int i = 0; i < realMesh.verts.Count; i++)
         {
-            decimal x = (realMesh.verts[i].Item1 - center.Item1) / (k + center.Item1);
-            decimal y = (realMesh.verts[i].Item2 - center.Item2) / (k + center.Item2);
+            decimal x = (realMesh.verts[i].Item1 - center.Item1) / (scale + center.Item1);
+            decimal y = (realMesh.verts[i].Item2 - center.Item2) / (scale + center.Item2);
             realMesh.verts[i] = (x, y);
         }
 
-        Debug.Log(realMesh.verts[10]);
-        Debug.Log(virtualMesh.verts[10]);
-
+        if (polygon_manipulation)
+        {
+            for (int i = 0; i <= n; i++)
+            {
+                (decimal x, decimal y) = realMesh.verts[i];
+                realMesh.verts[i] = ((x - center.Item1) * scale + center.Item1, (y - center.Item2) * scale + center.Item2);
+            }
+        }
         
     }
 
@@ -99,6 +113,7 @@ public class WorldScript : MonoBehaviour
             }
 
         }
+        
         return (0,0);
     }
 
@@ -115,6 +130,7 @@ public class WorldScript : MonoBehaviour
 
             if(util.is_point_in_triangle(P, A, B, C))
             {
+                //Debug.Log("IS in triangle " + P);
                 (decimal alpha, decimal beta, decimal gamma) = util.barycentric_coordinates(P, A, B, C);
                 (decimal, decimal) vA, vB, vC;
                 vA = realMesh.verts[t1];
