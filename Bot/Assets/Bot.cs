@@ -55,7 +55,7 @@ public class Bot : MonoBehaviour
         }
 
        // Debug.Log(virtualbot.position.x);
-
+        OrientToTarget(); //Orient every single fixed update
         Move(speed_scale);
     }
 
@@ -72,7 +72,7 @@ public class Bot : MonoBehaviour
             Shuffle();
             flag_i = 0;
         }
-        OrientToTarget();
+        // OrientToTarget();
     }
 
     float getRotTarget(float diffX, float diffZ) {
@@ -113,9 +113,23 @@ public class Bot : MonoBehaviour
         Debug.Log(targetAngle);
 
         float angleDiff = targetAngle - virtualbot.rotation.eulerAngles.y;
+        float maxRot = 5f; //A cap on the rotation per second
+
+        //Select the most efficient rotation direction
+        if (angleDiff > 180) {
+            angleDiff -= 360;
+        }
+        if (angleDiff < -180) {
+            angleDiff += 360;
+        }
 
         // virtualbot.LookAt(flags[flag_i].position);
-        virtualbot.Rotate(Vector3.up, angleDiff);
+
+        if (angleDiff < 0) {
+            virtualbot.Rotate(Vector3.up, Mathf.Max(angleDiff, -maxRot));
+        } else {
+            virtualbot.Rotate(Vector3.up, Mathf.Min(angleDiff, maxRot));
+        }
         Debug.Log(virtualbot.rotation.eulerAngles);
         realbot.rotation = virtualbot.rotation;
     }
