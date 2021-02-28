@@ -75,10 +75,48 @@ public class Bot : MonoBehaviour
         OrientToTarget();
     }
 
+    float getRotTarget(float diffX, float diffZ) {
+        //This here figures out the absolute rotation target.
+        
+        float targetAngle = 0;
+
+        if (diffX > 0 && diffZ > 0) {
+            targetAngle = Mathf.Atan(diffX / diffZ);
+        }
+        if (diffX > 0 && diffZ < 0) {
+            targetAngle = Mathf.PI - Mathf.Atan(diffX / -diffZ);
+        }
+        if (diffX < 0 && diffZ < 0) {
+            targetAngle = Mathf.PI + Mathf.Atan(diffX/diffZ);
+        }
+        if (diffX < 0 && diffZ > 0) {
+            targetAngle = 2f * Mathf.PI - Mathf.Atan(-diffX/diffZ);
+        }
+        if (diffZ == 0) {
+            if (diffX >= 0) {
+                targetAngle = Mathf.PI / 2f;
+            } else {
+                targetAngle = - Mathf.PI / 2f;
+            }
+        }
+        targetAngle *= (180f / Mathf.PI);
+        
+        return targetAngle;
+    }
+    
     void OrientToTarget() {
         
-        virtualbot.LookAt(flags[flag_i].position);
-        // Debug.Log(virtualbot.rotation.eulerAngles);
+        float diffX = flags[flag_i].position.x - virtualbot.position.x;
+        float diffZ = flags[flag_i].position.z - virtualbot.position.z;
+        
+        float targetAngle = getRotTarget(diffX, diffZ);
+        Debug.Log(targetAngle);
+
+        float angleDiff = targetAngle - virtualbot.rotation.eulerAngles.y;
+
+        // virtualbot.LookAt(flags[flag_i].position);
+        virtualbot.Rotate(Vector3.up, angleDiff);
+        Debug.Log(virtualbot.rotation.eulerAngles);
         realbot.rotation = virtualbot.rotation;
     }
 }
