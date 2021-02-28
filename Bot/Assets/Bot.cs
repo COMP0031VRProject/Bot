@@ -5,6 +5,8 @@ using UnityEngine;
 public class Bot : MonoBehaviour
 {
     public Transform[] flags;
+    public Transform virtualbot;
+    public Transform realbot;
     public float speed;
 
     private int flag_i;
@@ -32,18 +34,18 @@ public class Bot : MonoBehaviour
     {
         Shuffle();
         flag_i = 0;
-        transform.LookAt(flags[flag_i].position);
+        OrientToTarget();
         prev_pos = flags[flag_i].position;
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        dist = Vector3.Distance(transform.position, flags[flag_i].position);
-        prev_dist = Vector3.Distance(transform.position, prev_pos);
+        dist = Vector3.Distance(virtualbot.position, flags[flag_i].position);
+        prev_dist = Vector3.Distance(virtualbot.position, prev_pos);
         speed_scale = 1;
         if (dist < 0.5f)
         {
-            prev_pos = transform.position;
+            prev_pos = virtualbot.position;
             IncreaseIndex();
             
         }
@@ -52,14 +54,14 @@ public class Bot : MonoBehaviour
             speed_scale = Mathf.Min(dist, prev_dist + 0.5f) - 0.4f;
         }
 
-       // Debug.Log(transform.position.x);
+       // Debug.Log(virtualbot.position.x);
 
         Move(speed_scale);
     }
 
     void Move(float speed_scale)
     {
-        transform.Translate(Vector3.forward * speed * speed_scale * Time.deltaTime);
+        realbot.Translate(Vector3.forward * speed * speed_scale * Time.deltaTime);
     }
 
     void IncreaseIndex()
@@ -70,6 +72,13 @@ public class Bot : MonoBehaviour
             Shuffle();
             flag_i = 0;
         }
-        transform.LookAt(flags[flag_i].position);
+        OrientToTarget();
+    }
+
+    void OrientToTarget() {
+        
+        virtualbot.LookAt(flags[flag_i].position);
+        // Debug.Log(virtualbot.rotation.eulerAngles);
+        realbot.rotation = virtualbot.rotation;
     }
 }

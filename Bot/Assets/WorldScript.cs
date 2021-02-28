@@ -40,11 +40,10 @@ public class WorldScript : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Map the virtual bot to real bot 50 frames per second
-        (decimal x, decimal z) = virtual2Real(virtualbot);
-        if (x != 0 | z!= 0)
-        {
-            realbot.position = new Vector3((float)x, 0.5f, (float)z);
+        // Map the real bot to virtual bot 50 frames per second
+        (decimal x, decimal z) = real2Virtual(realbot);
+        if (x != 0 | z != 0) {
+            virtualbot.position = new Vector3((float)x, 0.5f, (float)z);
         }
     }
 
