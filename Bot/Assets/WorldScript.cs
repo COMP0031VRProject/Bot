@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class WorldScript : MonoBehaviour
 {
+    public Mesh[] virtualMeshs;
+    public Mesh[] realMeshs;
     public Mesh virtualMesh;
     public Mesh realMesh;
     public Transform virtualbot;
@@ -23,6 +25,17 @@ public class WorldScript : MonoBehaviour
         // Create all meshes for the environment
         generate_meshes();
 
+    }
+
+    void placeMeshes()
+    {
+        Utils util = new Utils();
+        for (int i = 0; i < flags.Length; i++)
+        {
+            (float x, float y) center = (flags[i].position.x, flags[i].position.z);
+            Mesh new_mesh = util.generate_embedded_polygon_mesh(20, 5, 2, (0, 0));
+
+        }
     }
 
     void FixedUpdate()
