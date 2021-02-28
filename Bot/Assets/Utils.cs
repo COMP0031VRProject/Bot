@@ -6,7 +6,7 @@ using UnityEngine;
 public class Utils
 {
     
-    public Mesh generate_polygon_mesh(int n, int size, (int x, int y) center)
+    public Mesh generate_polygon_mesh(int n, int size, (decimal x, decimal y) center)
     {
         double theta = 2 * Math.PI/n;
         decimal sin_theta = (decimal)Math.Sin(theta);

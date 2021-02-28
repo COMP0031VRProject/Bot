@@ -8,6 +8,7 @@ public class WorldScript : MonoBehaviour
     public Mesh realMesh;
     public Transform virtualbot;
     public Transform realbot;
+    public Transform[] flags;
     public bool homogenous;
     public bool polygon_manipulation;
     public bool lattice_crushing;
@@ -19,25 +20,23 @@ public class WorldScript : MonoBehaviour
 
     void Start()
     {
-        //virtualPosition = startPosition;
-        simulate();
+        // Create all meshes for the environment
+        generate_meshes();
 
     }
 
     void FixedUpdate()
     {
+        // Map the virtual bot to real bot 50 frames per second
         (decimal x, decimal z) = virtual2Real(virtualbot);
         if (x != 0 | z!= 0)
         {
             realbot.position = new Vector3((float)x, 0.5f, (float)z);
         }
-        //virtualbot.position = realbot.position;
-        //Debug.Log("x: " + (float)x);
-        //Debug.Log("z: " + (float)z);
-        //Debug.Log(realbot.position.x);
     }
 
-    void simulate()
+    // TODO: Create mesh around each of the 6 flags and apply homogenous to rest of area
+    void generate_meshes()
     {
         Utils util = new Utils();
 
@@ -45,6 +44,7 @@ public class WorldScript : MonoBehaviour
         realMesh = util.generate_embedded_polygon_mesh(20, 5, 2, (0, 0));
 
 
+        // Homogenous or polygon manipulation
         (decimal, decimal) center = realMesh.verts[0];
 
         for (int i = 0; i < realMesh.verts.Count; i++)
