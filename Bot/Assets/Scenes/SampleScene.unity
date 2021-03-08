@@ -286,6 +286,7 @@ MonoBehaviour:
   virtualbot: {fileID: 998156956}
   realbot: {fileID: 854079641}
   speed: 1.2
+  numTargets: 3
 --- !u!1 &214550351
 GameObject:
   m_ObjectHideFlags: 0
@@ -469,6 +470,7 @@ MonoBehaviour:
   virtualbot: {fileID: 0}
   realbot: {fileID: 0}
   speed: 4
+  numTargets: 0
 --- !u!135 &490266591
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1154,6 +1156,7 @@ MonoBehaviour:
   virtualbot: {fileID: 0}
   realbot: {fileID: 0}
   speed: 3
+  numTargets: 0
 --- !u!65 &998156953
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1335,7 +1338,7 @@ GameObject:
   - component: {fileID: 1325014572}
   - component: {fileID: 1325014571}
   m_Layer: 0
-  m_Name: Plane
+  m_Name: VirtualPlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1411,7 +1414,7 @@ Transform:
   m_GameObject: {fileID: 1325014570}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.6, y: 1, z: 1.6}
+  m_LocalScale: {x: 1.8, y: 1, z: 1.8}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2

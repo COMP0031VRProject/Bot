@@ -8,12 +8,47 @@ public class Bot : MonoBehaviour
     public Transform virtualbot;
     public Transform realbot;
     public float speed;
+    public int numTargets;
 
-    private int flag_i;
+    private int flag_i; //Unused in current situation
     private float speed_scale;
     private float dist;
     private Vector3 prev_pos;
     private float prev_dist;
+
+    private List<int> flag_seq = new List<int>();
+    private Transform target;
+    private int ind;
+    private bool done = true;
+    private bool rotating = false;
+
+    int wrapback(int n) {
+        if (n < 0) {
+            return n + 6;
+        } else {
+            return n % 6;
+        }
+    }
+
+    void generateRandomFlagSeq(int n) {
+        //n is number of flags in sequence, either 3 or 5.
+        System.Random rnd = new System.Random();
+        int flag1 = rnd.Next(6);
+        flag_seq.Add(flag1);
+        int flag2 = (flag1-1) + rnd.Next(2) * 2;
+        flag2 = wrapback(flag2);
+        flag_seq.Add(flag2);
+        int flag3 = (flag2-1) + rnd.Next(2) * 2;
+        flag3 = wrapback(flag3);
+        flag_seq.Add(flag3);
+        if (n == 5) {
+            int flag4 = (flag3 - 2) + rnd.Next(2) * 4;
+            flag4 = wrapback(flag4);
+            flag_seq.Add(flag4);
+            int flag5 = (flag4 + 3) % 6;
+            flag_seq.Add(flag5);
+        }
+    }
 
     void Shuffle() {
         System.Random rnd = new System.Random();
@@ -32,21 +67,37 @@ public class Bot : MonoBehaviour
     
     void Start()
     {
-        Shuffle();
-        flag_i = 0;
+        generateRandomFlagSeq(numTargets);
+        // Shuffle();
+        //flag_i = 0;
+        ind = 0;
+        target = flags[flag_seq[ind]];
         OrientToTarget();
-        prev_pos = flags[flag_i].position;
+        //prev_pos = flags[flag_i].position;
+        prev_pos = target.position;
+        done = false;
     }
 
     void FixedUpdate()
     {
-        dist = Vector3.Distance(virtualbot.position, flags[flag_i].position);
+        if (done) {
+            return;
+        }
+        // dist = Vector3.Distance(virtualbot.position, flags[flag_i].position);
+        dist = Vector3.Distance(virtualbot.position, target.position);
         prev_dist = Vector3.Distance(virtualbot.position, prev_pos);
         speed_scale = 1;
         if (dist < 0.5f)
         {
             prev_pos = virtualbot.position;
-            IncreaseIndex();
+            ind += 1;
+            if (ind >= flag_seq.Count) {
+                //Terminate program
+                done = true;
+                return;
+            }
+            target = flags[flag_seq[ind]];
+            //IncreaseIndex();
             
         }
         if (dist < 1.4f || prev_dist < 0.9f)
@@ -56,7 +107,9 @@ public class Bot : MonoBehaviour
 
        // Debug.Log(virtualbot.position.x);
         OrientToTarget(); //Orient every single fixed update
-        Move(speed_scale);
+        if (!rotating) {
+            Move(speed_scale);    
+        }
     }
 
     void Move(float speed_scale)
@@ -106,14 +159,24 @@ public class Bot : MonoBehaviour
     
     void OrientToTarget() {
         
-        float diffX = flags[flag_i].position.x - virtualbot.position.x;
-        float diffZ = flags[flag_i].position.z - virtualbot.position.z;
+        // float diffX = flags[flag_i].position.x - virtualbot.position.x;
+        // float diffZ = flags[flag_i].position.z - virtualbot.position.z;
+
+        float diffX = target.position.x - virtualbot.position.x;
+        float diffZ = target.position.z - virtualbot.position.z;
+        float maxRot = 5f; //A cap on the rotation per second
         
         float targetAngle = getRotTarget(diffX, diffZ);
         Debug.Log(targetAngle);
 
         float angleDiff = targetAngle - virtualbot.rotation.eulerAngles.y;
-        float maxRot = 5f; //A cap on the rotation per second
+        if (Mathf.Abs(angleDiff) >= maxRot) {
+            rotating = true;
+        } else {
+            rotating = false; //Can start moving again.
+        }
+
+        
 
         //Select the most efficient rotation direction
         if (angleDiff > 180) {
@@ -130,6 +193,7 @@ public class Bot : MonoBehaviour
         } else {
             virtualbot.Rotate(Vector3.up, Mathf.Min(angleDiff, maxRot));
         }
+
         Debug.Log(virtualbot.rotation.eulerAngles);
         realbot.rotation = virtualbot.rotation;
     }
