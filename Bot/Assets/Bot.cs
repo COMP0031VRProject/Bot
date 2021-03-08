@@ -10,7 +10,7 @@ public class Bot : MonoBehaviour
     public float speed;
     public int numTargets;
 
-    private int flag_i; //Unused in current situation
+    // private int flag_i; //Unused in current situation
     private float speed_scale;
     private float dist;
     private Vector3 prev_pos;
@@ -50,20 +50,20 @@ public class Bot : MonoBehaviour
         }
     }
 
-    void Shuffle() {
-        System.Random rnd = new System.Random();
-        for (int i = flags.Length - 1; i > 0; i--)
-        {
-            int rand_i = rnd.Next(i + 1);
-            if (rand_i == flags.Length - 1) {
-                //Prevent case where there's two consecutive flags chosen
-                rand_i = 0;
-            }
-            Transform temp = flags[i];
-            flags[i] = flags[rand_i];
-            flags[rand_i] = temp;
-        }
-    }
+    // void Shuffle() {
+    //     System.Random rnd = new System.Random();
+    //     for (int i = flags.Length - 1; i > 0; i--)
+    //     {
+    //         int rand_i = rnd.Next(i + 1);
+    //         if (rand_i == flags.Length - 1) {
+    //             //Prevent case where there's two consecutive flags chosen
+    //             rand_i = 0;
+    //         }
+    //         Transform temp = flags[i];
+    //         flags[i] = flags[rand_i];
+    //         flags[rand_i] = temp;
+    //     }
+    // }
     
     void Start()
     {
@@ -117,16 +117,16 @@ public class Bot : MonoBehaviour
         realbot.Translate(Vector3.forward * speed * speed_scale * Time.deltaTime);
     }
 
-    void IncreaseIndex()
-    {
-        flag_i++;
-        if (flag_i >= flags.Length)
-        {
-            Shuffle();
-            flag_i = 0;
-        }
-        // OrientToTarget();
-    }
+    // void IncreaseIndex()
+    // {
+    //     flag_i++;
+    //     if (flag_i >= flags.Length)
+    //     {
+    //         Shuffle();
+    //         flag_i = 0;
+    //     }
+    //     // OrientToTarget();
+    // }
 
     float getRotTarget(float diffX, float diffZ) {
         //This here figures out the absolute rotation target.
