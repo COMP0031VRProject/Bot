@@ -37,7 +37,7 @@ public class WorldScript : MonoBehaviour
         for (int i = 0; i < flags.Length; i++) {
             float x = Mathf.Cos(Mathf.PI/3 * i) * dist;
             float z = Mathf.Sin(Mathf.PI/3 * i) * dist;
-            flags[i].position = new Vector3(x, 0.75f, z);
+            flags[i].position = new Vector3(x, flags[i].position.y, z);
         }
     }
 
@@ -57,7 +57,7 @@ public class WorldScript : MonoBehaviour
         // Map the real bot to virtual bot 50 frames per second
         (decimal x, decimal z) = real2Virtual(realbot);
         if (x != 0 | z != 0) {
-            virtualbot.position = new Vector3((float)x, 0.9f, (float)z);
+            virtualbot.position = new Vector3((float)x, virtualbot.position.y, (float)z);
         }
     }
 
