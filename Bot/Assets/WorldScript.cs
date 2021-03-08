@@ -10,6 +10,7 @@ public class WorldScript : MonoBehaviour
     public Mesh realMesh;
     public Transform virtualbot;
     public Transform realbot;
+    public Transform camera;
     public Transform[] flags;
     public bool homogenous;
     public bool polygon_manipulation;
@@ -22,9 +23,22 @@ public class WorldScript : MonoBehaviour
 
     void Start()
     {
+        positionObjs(); //Position the flags and camera correctly
+        
         // Create all meshes for the environment
         generate_meshes();
 
+    }
+
+    void positionObjs()
+    {
+        int dist = scale; //Distance of flag {2m if scale = 2, 4m if scale = 4, etc...}
+        camera.position = new Vector3(camera.position.x, scale * 2 + 1, camera.position.z);
+        for (int i = 0; i < flags.Length; i++) {
+            float x = Mathf.Cos(Mathf.PI/3 * i) * dist;
+            float z = Mathf.Sin(Mathf.PI/3 * i) * dist;
+            flags[i].position = new Vector3(x, 0.75f, z);
+        }
     }
 
     void placeMeshes()
@@ -43,7 +57,7 @@ public class WorldScript : MonoBehaviour
         // Map the real bot to virtual bot 50 frames per second
         (decimal x, decimal z) = real2Virtual(realbot);
         if (x != 0 | z != 0) {
-            virtualbot.position = new Vector3((float)x, 0.5f, (float)z);
+            virtualbot.position = new Vector3((float)x, 0.9f, (float)z);
         }
     }
 
