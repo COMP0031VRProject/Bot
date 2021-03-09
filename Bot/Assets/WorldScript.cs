@@ -19,7 +19,8 @@ public class WorldScript : MonoBehaviour
     public int size;
     public int scale;
 
-
+    private decimal offsetX = 10.5m;
+    private decimal offsetZ = 7.5m;
 
     void Start()
     {
@@ -95,7 +96,8 @@ public class WorldScript : MonoBehaviour
     {
 
         Utils util = new Utils();
-        (decimal, decimal) P = ((decimal)pos.position.x, (decimal)pos.position.z);
+        //Add an extra offset here... (NOTE this is not added in V2R)
+        (decimal, decimal) P = ((decimal)pos.position.x + offsetX, (decimal)pos.position.z + offsetZ);
         decimal i1, i2;
         //Debug.Log(realMesh.tInd.Count);
         foreach ((int t1, int t2, int t3) in realMesh.tInd)
