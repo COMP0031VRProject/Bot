@@ -35,16 +35,16 @@ public class Utils
         Mesh mesh = new Mesh(verts, tInd);
         return mesh;
     }
-
+    
     public Mesh generate_embedded_polygon_mesh(int n, int M, int size, (int x, int y) center)
     {
         double theta = 2 * Math.PI / n;
         decimal sin_theta = (decimal)(Math.Sin(theta));
         decimal cos_theta = (decimal)(Math.Cos(theta));
-        Func<List<decimal>, List<decimal>> relative2world = coord => (coord[0] + center.x, coord[1] + center.y);
-        Func<List<decimal>, List<decimal>> rotate = coord => (coord[0] * cos_theta - coord[1] * sin_theta, coord[0] * sin_theta + coord[1] * cos_theta);
+        Func<List<decimal>, List<decimal>> relative2world = coord => new List<decimal> { coord[0] + center.x, coord[1] + center.y };
+        Func<List<decimal>, List<decimal>> rotate = coord => new List<decimal> { coord[0] * cos_theta - coord[1] * sin_theta, coord[0] * sin_theta + coord[1] * cos_theta };
         List<decimal> first = (0, size);
-        List<List<decimal>> verts = new List<List<decimal>> { (0, 0), first };
+        List<List<decimal>> verts = new List<List<decimal>> { [0, 0, first };
 
         List<(int, int, int)> tInd = new List<(int, int, int)>();
         List<decimal> previous = first;
@@ -77,7 +77,7 @@ public class Utils
 
         Mesh mesh = new Mesh(verts, tInd);
         return mesh;
-    } */
+    }  */
 
     Func<List<decimal>, decimal> line_implicit_equation(List<decimal> A, List<decimal> B)
     {
@@ -90,7 +90,11 @@ public class Utils
 
     public bool is_point_in_triangle(List<decimal> P, List<decimal> A, List<decimal> B, List<decimal> C)
     {
+        Debug.Log("x: "+ P[0] + " z: "+ P[1]);
         decimal x = line_implicit_equation(A, B)(P);
+        Debug.Log("Calculation 1: " + x);
+        Debug.Log("verticeA: " + A[0] + "," + A[1]);
+        Debug.Log("verticeB: " + B[0] + "," + B[1]);
         decimal y = line_implicit_equation(B, C)(P);
         decimal z = line_implicit_equation(C, A)(P);
 

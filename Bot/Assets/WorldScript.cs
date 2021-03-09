@@ -10,6 +10,7 @@ public class WorldScript : MonoBehaviour
     public TextAsset realJson;
     public Transform virtualbot;
     public Transform realbot;
+    public Transform camera;
     public Transform[] flags;
     public bool homogenous;
     public bool polygon_manipulation;
@@ -22,42 +23,44 @@ public class WorldScript : MonoBehaviour
 
     void Start()
     {
+        readMeshFiles();
+        positionObjs(); //Position the flags and camera correctly
         // Create all meshes for the environment
         //generate_meshes();
-        readMeshFiles();
 
     }
 
-   /* void placeMeshes()
-    {
-        Utils util = new Utils();
-        for (int i = 0; i < flags.Length; i++)
-        {
-            (float x, float y) center = (flags[i].position.x, flags[i].position.z);
-            Mesh new_mesh = util.generate_embedded_polygon_mesh(20, 5, 2, (0, 0));
 
+    void positionObjs()
+    {
+        int dist = scale; //Distance of flag {2m if scale = 2, 4m if scale = 4, etc...}
+        camera.position = new Vector3(camera.position.x, scale * 2 + 1, camera.position.z);
+        for (int i = 0; i < flags.Length; i++) {
+            float x = Mathf.Cos(Mathf.PI/3 * i) * dist;
+            float z = Mathf.Sin(Mathf.PI/3 * i) * dist;
+            flags[i].position = new Vector3(x, flags[i].position.y, z);
         }
-    } */
+    }
+
+
 
     void FixedUpdate()
     {
-       // Map the virtual bot to real bot 50 frames per second
-       List<decimal>coordinates  = virtual2Real(virtualbot);
-       if (coordinates != null)
-       {
-           realbot.position = new Vector3((float)coordinates[0], 0.5f, (float)coordinates[1]);
-       }
-       else
-       {
-            Debug.Log("damn");
-       }
+        // Map the real bot to virtual bot 50 frames per second
+        List<decimal> coordinates = real2Virtual(realbot);
+        if (coordinates != null) {
+            virtualbot.position = new Vector3((float)coordinates[0], virtualbot.position.y, (float)coordinates[1]);
+        }
     }
 
     void readMeshFiles()
     {
-        // Create meshes from json files
-        realMesh = Newtonsoft.Json.JsonConvert.DeserializeObject<Mesh>(realJson.text);
-        virtualMesh = Newtonsoft.Json.JsonConvert.DeserializeObject<Mesh>(virtualJson.text);
+        // Create meshes from json files 
+        Mesh realM = Newtonsoft.Json.JsonConvert.DeserializeObject<Mesh>(realJson.text);
+        Mesh virtualM = Newtonsoft.Json.JsonConvert.DeserializeObject<Mesh>(virtualJson.text);
+        realMesh = new Mesh(realM.verts, realM.tInd);
+        virtualMesh = new Mesh(virtualM.verts, virtualM.tInd);
+
     }
 
     
@@ -95,7 +98,7 @@ public class WorldScript : MonoBehaviour
     {
 
         Utils util = new Utils();
-        List<decimal> P = new List<decimal> { (decimal)pos.position.x, (decimal)pos.position.z };
+        List<decimal> P = new List<decimal> {(decimal)pos.position.x, (decimal)pos.position.z};
         decimal i1, i2;
         //Debug.Log(realMesh.tInd.Count);
         foreach (List<int> t in realMesh.tInd)
@@ -104,10 +107,10 @@ public class WorldScript : MonoBehaviour
             A = realMesh.verts[t[0]];
             B = realMesh.verts[t[1]];
             C = realMesh.verts[t[2]];
-            Debug.Log(P[0]);
 
             if (util.is_point_in_triangle(P, A, B, C))
             {
+                Debug.Log("IS INTHE TRIANGLE");
                 (decimal alpha, decimal beta, decimal gamma) = util.barycentric_coordinates(P, A, B, C);
                 List<decimal> vA, vB, vC;
                 vA = virtualMesh.verts[t[0]];
