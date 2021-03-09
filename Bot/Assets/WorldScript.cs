@@ -104,7 +104,7 @@ public class WorldScript : MonoBehaviour
             A = realMesh.verts[t[0]];
             B = realMesh.verts[t[1]];
             C = realMesh.verts[t[2]];
-            
+            Debug.Log(P[0]);
 
             if (util.is_point_in_triangle(P, A, B, C))
             {
@@ -148,21 +148,18 @@ public class WorldScript : MonoBehaviour
         Utils util = new Utils();
         List<decimal> P = new List<decimal>{(decimal)pos.position.x, (decimal)pos.position.z};
 
-        foreach (List<decimal> v in virtualMesh.verts)
-        {
-            Debug.Log(v[0]);
-        }
-
         foreach (List<int> t in virtualMesh.tInd)
         {
             List<decimal> A, B, C;
             A = virtualMesh.verts[t[0]];
             B = virtualMesh.verts[t[1]];
             C = virtualMesh.verts[t[2]];
+            Debug.Log(P[0]);
+            Debug.Log(P[1]);
 
-            if(util.is_point_in_triangle(P, A, B, C))
+            if (util.is_point_in_triangle(P, A, B, C))
             {
-                //Debug.Log("IS in triangle " + P);
+                
                 (decimal alpha, decimal beta, decimal gamma) = util.barycentric_coordinates(P, A, B, C);
                 List<decimal> vA, vB, vC;
                 vA = realMesh.verts[t[0]];

@@ -79,7 +79,7 @@ public class Utils
         return mesh;
     } */
 
-    Func<List<decimal>, decimal> line_implicit_equation(List<decimal> A, List<decimal>B)
+    Func<List<decimal>, decimal> line_implicit_equation(List<decimal> A, List<decimal> B)
     {
         decimal _A = A[1] - B[1];
         decimal _B = B[0] - A[0];
@@ -90,9 +90,9 @@ public class Utils
 
     public bool is_point_in_triangle(List<decimal> P, List<decimal> A, List<decimal> B, List<decimal> C)
     {
-        float x = (float)line_implicit_equation(A, B)(P);
-        float y = (float)line_implicit_equation(B, C)(P);
-        float z = (float)line_implicit_equation(C, A)(P);
+        decimal x = line_implicit_equation(A, B)(P);
+        decimal y = line_implicit_equation(B, C)(P);
+        decimal z = line_implicit_equation(C, A)(P);
 
         return x >= 0 && y >= 0 && z >= 0;
     }
