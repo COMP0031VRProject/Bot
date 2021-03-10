@@ -234,6 +234,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ade0a8f49e9f0d645847b79789844244, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  virtualPlane: {fileID: 1325014574}
+  realPlane: {fileID: 522699701}
   virtualbot: {fileID: 998156956}
   realbot: {fileID: 854079641}
   camera: {fileID: 963194228}
@@ -248,8 +250,8 @@ MonoBehaviour:
   polygon_manipulation: 0
   lattice_crushing: 0
   n: 20
-  size: 5
-  scale: 4
+  real_width_m: 10
+  scale: 2
 --- !u!4 &142944726
 Transform:
   m_ObjectHideFlags: 0
@@ -1392,8 +1394,8 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
-  orthographic size: 5
+  orthographic: 1
+  orthographic size: 2
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2

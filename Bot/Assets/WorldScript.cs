@@ -8,6 +8,8 @@ public class WorldScript : MonoBehaviour
     public Mesh[] realMeshs;
     public Mesh virtualMesh;
     public Mesh realMesh;
+    public Transform virtualPlane;
+    public Transform realPlane;
     public Transform virtualbot;
     public Transform realbot;
     public Transform camera;
@@ -16,11 +18,11 @@ public class WorldScript : MonoBehaviour
     public bool polygon_manipulation;
     public bool lattice_crushing;
     public int n;
-    public int size;
+    public int real_width_m;
     public int scale;
 
-    private decimal offsetX = 10.5m;
-    private decimal offsetZ = 7.5m;
+    private float offsetX;
+    private float offsetZ;
 
     void Start()
     {
@@ -33,13 +35,32 @@ public class WorldScript : MonoBehaviour
 
     void positionObjs()
     {
-        int dist = scale; //Distance of flag {2m if scale = 2, 4m if scale = 4, etc...}
-        camera.position = new Vector3(camera.position.x, scale * 2 + 1, camera.position.z);
+        int dist = scale * 4; //Distance of flag {2m if scale = 2, 4m if scale = 4, etc...}
         for (int i = 0; i < flags.Length; i++) {
             float x = Mathf.Cos(Mathf.PI/3 * i) * dist;
             float z = Mathf.Sin(Mathf.PI/3 * i) * dist;
             flags[i].position = new Vector3(x, flags[i].position.y, z);
         }
+
+        // Init Plane Positions and Sizes
+        float virtual_width = real_width_m * scale / 10f;
+        virtualPlane.localScale = new Vector3(virtual_width, 1f, virtual_width);
+        
+        float real_width = real_width_m / 10f;
+        realPlane.localScale = new Vector3(real_width, 1f, real_width);
+        
+        offsetX = 0.5f * 10f * (real_width + virtual_width);
+        offsetZ = 0.5f * 10f * (virtual_width - real_width);
+        
+        realPlane.position = new Vector3(-offsetX, 0f, -offsetZ);
+
+        // Position Bots in Center of spaces
+        virtualbot.position = virtualPlane.position + new Vector3(0, 0.9f, 0);
+        realbot.position = realPlane.position + new Vector3(0, 0.9f, 0);
+
+        // Place Camera
+        float pos_avg = 0.5f * (realPlane.position.x + virtualPlane.position.x);
+        camera.position = new Vector3(pos_avg + 2.5f, scale * 8 + 1, camera.position.z);
     }
 
     void placeMeshes()
@@ -97,7 +118,7 @@ public class WorldScript : MonoBehaviour
 
         Utils util = new Utils();
         //Add an extra offset here... (NOTE this is not added in V2R)
-        (decimal, decimal) P = ((decimal)pos.position.x + offsetX, (decimal)pos.position.z + offsetZ);
+        (decimal, decimal) P = ((decimal)pos.position.x + (decimal)offsetX, (decimal)pos.position.z + (decimal)offsetZ);
         decimal i1, i2;
         //Debug.Log(realMesh.tInd.Count);
         foreach ((int t1, int t2, int t3) in realMesh.tInd)
