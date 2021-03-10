@@ -167,7 +167,7 @@ public class Bot : MonoBehaviour
         float maxRot = 5f; //A cap on the rotation per second
         
         float targetAngle = getRotTarget(diffX, diffZ);
-        Debug.Log(targetAngle);
+        //Debug.Log(targetAngle);
 
         float angleDiff = targetAngle - virtualbot.rotation.eulerAngles.y;
         if (Mathf.Abs(angleDiff) >= maxRot) {
@@ -194,7 +194,7 @@ public class Bot : MonoBehaviour
             virtualbot.Rotate(Vector3.up, Mathf.Min(angleDiff, maxRot));
         }
 
-        Debug.Log(virtualbot.rotation.eulerAngles);
+        //Debug.Log(virtualbot.rotation.eulerAngles);
         realbot.rotation = virtualbot.rotation;
     }
 }

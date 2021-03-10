@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657838, g: 0.49641234, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -236,9 +236,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   virtualPlane: {fileID: 1325014574}
   realPlane: {fileID: 522699701}
+  virtualJson: {fileID: 4900000, guid: b6134b50e619a724fa13d530b78e01b5, type: 3}
+  realJson: {fileID: 4900000, guid: a87e4092035381e4c9574f9a64c6106a, type: 3}
   virtualbot: {fileID: 998156956}
   realbot: {fileID: 854079641}
-  camera: {fileID: 963194228}
+  camera: {fileID: 0}
   flags:
   - {fileID: 1702631329}
   - {fileID: 321280736}
@@ -288,7 +290,7 @@ MonoBehaviour:
   virtualbot: {fileID: 998156956}
   realbot: {fileID: 854079641}
   speed: 1.2
-  numTargets: 3
+  numTargets: 0
 --- !u!1 &214550351
 GameObject:
   m_ObjectHideFlags: 0
@@ -1027,7 +1029,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 854079637}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10.5, y: 0.9, z: -7.5}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 0.5, y: 1.8, z: 0.5}
   m_Children:
   - {fileID: 2070597166}
