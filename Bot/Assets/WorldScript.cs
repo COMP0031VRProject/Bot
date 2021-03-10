@@ -25,10 +25,6 @@ public class WorldScript : MonoBehaviour
     void Start()
     {
         readMeshFiles();
-        foreach (List<decimal> v in virtualMesh.verts)
-        {
-            Debug.Log(v[0] + ", " + v[1]);
-        }
 
         positionObjs(); //Position the flags and camera correctly
         // Create all meshes for the environment
@@ -105,9 +101,9 @@ public class WorldScript : MonoBehaviour
     {
 
         Utils util = new Utils();
-        List<decimal> P = new List<decimal> {(decimal)pos.position.x, (decimal)pos.position.z};
         //Add an extra offset here... (NOTE this is not added in V2R)
-        (decimal, decimal) P = ((decimal)pos.position.x + offsetX, (decimal)pos.position.z + offsetZ);
+        List<decimal> P = new List<decimal> {(decimal)pos.position.x + offsetX, (decimal)pos.position.z + offsetZ};
+
         decimal i1, i2;
         //Debug.Log(realMesh.tInd.Count);
         foreach (List<int> t in realMesh.tInd)
@@ -118,11 +114,11 @@ public class WorldScript : MonoBehaviour
             A = realMesh.verts[t[0]];
             B = realMesh.verts[t[1]];
             C = realMesh.verts[t[2]];
-            //Debug.Log(A[0]);
 
+            // Check if in triangle (anti-clockwise order)
             if (util.is_point_in_triangle(P, A, B, C))
             {
-                Debug.Log("IS INTHE TRIANGLE");
+                //Debug.Log("IS INTHE TRIANGLE");
                 (decimal alpha, decimal beta, decimal gamma) = util.barycentric_coordinates(P, A, B, C);
                 List<decimal> vA = new List<decimal>(virtualMesh.verts[t[0]]);
                 List<decimal> vB = new List<decimal>(virtualMesh.verts[t[1]]);
