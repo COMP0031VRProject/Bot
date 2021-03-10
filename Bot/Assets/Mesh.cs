@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 [Serializable]
 public class Mesh
@@ -13,6 +14,18 @@ public class Mesh
     {
         this.verts = verts;
         this.tInd = tInd;
+    }
+    public decimal getMax()
+    {
+        decimal max = 0m;
+        foreach (List<decimal> arr in this.verts)
+        {
+            if (arr.Max() > max)
+            {
+                max = arr.Max();
+            }
+        }
+        return max;
     }
 
 }

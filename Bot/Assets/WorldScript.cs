@@ -18,6 +18,8 @@ public class WorldScript : MonoBehaviour
     public bool polygon_manipulation;
     public bool lattice_crushing;
     // public int n;
+    
+    // Default Values, replaced in script with mesh.
     public float real_width_m;
     public float scale;
 
@@ -85,6 +87,11 @@ public class WorldScript : MonoBehaviour
         Mesh virtualM = Newtonsoft.Json.JsonConvert.DeserializeObject<Mesh>(virtualJson.text);
         virtualMesh = new Mesh(virtualM.verts, virtualM.tInd);
 
+        //Updates the real_width_m (real space width in metres) from mesh
+        float real_max = (float) realM.getMax();
+        real_width_m = real_max * 2f;
+        //Updates the scaling factor 
+        scale = (float)virtualM.getMax() / real_max;
     }
 
     
