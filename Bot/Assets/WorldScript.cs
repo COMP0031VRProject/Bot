@@ -19,11 +19,17 @@ public class WorldScript : MonoBehaviour
     public int size;
     public int scale;
 
-
+    private decimal offsetX = 10.5m;
+    private decimal offsetZ = 7.5m;
 
     void Start()
     {
         readMeshFiles();
+        foreach (List<decimal> v in virtualMesh.verts)
+        {
+            Debug.Log(v[0] + ", " + v[1]);
+        }
+
         positionObjs(); //Position the flags and camera correctly
         // Create all meshes for the environment
         //generate_meshes();
@@ -47,7 +53,8 @@ public class WorldScript : MonoBehaviour
     void FixedUpdate()
     {
         // Map the real bot to virtual bot 50 frames per second
-        List<decimal> coordinates = real2Virtual(realbot);
+        List<decimal> coordinates = new List<decimal>();
+        coordinates = real2Virtual(realbot);
         if (coordinates != null) {
             virtualbot.position = new Vector3((float)coordinates[0], virtualbot.position.y, (float)coordinates[1]);
         }
@@ -57,8 +64,8 @@ public class WorldScript : MonoBehaviour
     {
         // Create meshes from json files 
         Mesh realM = Newtonsoft.Json.JsonConvert.DeserializeObject<Mesh>(realJson.text);
-        Mesh virtualM = Newtonsoft.Json.JsonConvert.DeserializeObject<Mesh>(virtualJson.text);
         realMesh = new Mesh(realM.verts, realM.tInd);
+        Mesh virtualM = Newtonsoft.Json.JsonConvert.DeserializeObject<Mesh>(virtualJson.text);
         virtualMesh = new Mesh(virtualM.verts, virtualM.tInd);
 
     }
@@ -99,24 +106,29 @@ public class WorldScript : MonoBehaviour
 
         Utils util = new Utils();
         List<decimal> P = new List<decimal> {(decimal)pos.position.x, (decimal)pos.position.z};
+        //Add an extra offset here... (NOTE this is not added in V2R)
+        (decimal, decimal) P = ((decimal)pos.position.x + offsetX, (decimal)pos.position.z + offsetZ);
         decimal i1, i2;
         //Debug.Log(realMesh.tInd.Count);
         foreach (List<int> t in realMesh.tInd)
         {
-            List<decimal> A, B, C;
+            List<decimal> A = new List<decimal>();
+            List<decimal> B = new List<decimal>();
+            List<decimal> C = new List<decimal>();
             A = realMesh.verts[t[0]];
             B = realMesh.verts[t[1]];
             C = realMesh.verts[t[2]];
+            //Debug.Log(A[0]);
 
             if (util.is_point_in_triangle(P, A, B, C))
             {
                 Debug.Log("IS INTHE TRIANGLE");
                 (decimal alpha, decimal beta, decimal gamma) = util.barycentric_coordinates(P, A, B, C);
-                List<decimal> vA, vB, vC;
-                vA = virtualMesh.verts[t[0]];
-                vB = virtualMesh.verts[t[1]];
-                vC = virtualMesh.verts[t[2]];
-                //Debug.Log(vB);
+                List<decimal> vA = new List<decimal>(virtualMesh.verts[t[0]]);
+                List<decimal> vB = new List<decimal>(virtualMesh.verts[t[1]]);
+                List<decimal> vC = new List<decimal>(virtualMesh.verts[t[2]]);
+
+                //Debug.Log(vA[0]);
                 //Debug.Log(alpha);
                 //Debug.Log(beta);
                 //Debug.Log(gamma);
@@ -128,9 +140,6 @@ public class WorldScript : MonoBehaviour
                 vC[0] = vC[0] * gamma;
                 vC[1] = vC[1] * gamma;
 
-                //Debug.Log("A: " + vA);
-                //Debug.Log("B: " + vB);
-                //Debug.Log("c: " + vC);
 
                 i1 = vA[0] + vB[0] + vC[0];
                 i2 = vA[1] + vB[1] + vC[1];

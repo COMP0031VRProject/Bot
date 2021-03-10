@@ -84,17 +84,14 @@ public class Utils
         decimal _A = A[1] - B[1];
         decimal _B = B[0] - A[0];
         decimal _C = A[0] * B[1] - B[0] * A[1];
-        Func<List<decimal>, decimal> value = p => (_A* p[0] +_B * p[1] + _C);
+        Func<List<decimal>, decimal> value = p => (_A * p[0] + _B * p[1] + _C);
         return value;
     }
 
     public bool is_point_in_triangle(List<decimal> P, List<decimal> A, List<decimal> B, List<decimal> C)
     {
-        Debug.Log("x: "+ P[0] + " z: "+ P[1]);
+        //Debug.Log("x: " + P[0] + " z: " + P[1]);
         decimal x = line_implicit_equation(A, B)(P);
-        Debug.Log("Calculation 1: " + x);
-        Debug.Log("verticeA: " + A[0] + "," + A[1]);
-        Debug.Log("verticeB: " + B[0] + "," + B[1]);
         decimal y = line_implicit_equation(B, C)(P);
         decimal z = line_implicit_equation(C, A)(P);
 
