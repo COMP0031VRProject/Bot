@@ -30,6 +30,13 @@ public class Bot : MonoBehaviour
         }
     }
 
+    void loadFixedFlagSeq(int n) {
+        //Using this to test whether simply adding flag sequences is good.
+        for (int i = 0; i < n; i++) {
+            flag_seq.Add(i);
+        }
+    }
+
     void generateRandomFlagSeq(int n) {
         //n is number of flags in sequence, either 3 or 5.
         System.Random rnd = new System.Random();
@@ -67,7 +74,8 @@ public class Bot : MonoBehaviour
     
     void Start()
     {
-        generateRandomFlagSeq(numTargets);
+        loadFixedFlagSeq(numTargets);
+        // generateRandomFlagSeq(numTargets); //Temporary comment out to make room for trials
         // Shuffle();
         //flag_i = 0;
         ind = 0;
