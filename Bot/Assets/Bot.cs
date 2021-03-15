@@ -14,6 +14,7 @@ public class Bot : MonoBehaviour
     private float speed_scale;
     private float dist;
     private Vector3 prev_pos;
+    private Vector3 prev_location;
     private float prev_dist;
 
     private List<int> flag_seq = new List<int>();
@@ -21,6 +22,61 @@ public class Bot : MonoBehaviour
     private int ind;
     private bool done = true;
     private bool rotating = false;
+
+    // Metrics 
+    private float T_AD;   // Angle error
+    private float T_TCT;  // Task completion time
+    private float T_RD;   // Real distance travelled
+    private float T_VD;   // Virtual distance travelled
+    private Vector3 lastRealPosition;
+    private Vector3 lastVirtualPosition;
+    private float optimumPath;
+    public bool T_D;
+
+
+    // Handle metrics here
+    void initialiseMetrics() {
+        T_TCT = 0.0f;
+        lastRealPosition = realbot.position;
+        lastVirtualPosition = virtualbot.position;
+
+        // Calculate optimum path
+        /*optimumPath = Vector3.Distance(virtualbot.position, flags[0].position);
+        for (int i = 0; i < flag_seq.Count -1; i++)
+        {
+            float distance = Vector3.Distance(flags[flag_seq[i]].position, flags[flag_seq[i + 1]].position);
+            optimumPath += distance;
+        } */
+
+    }
+
+    void updateMetrics(){
+        T_TCT += Time.deltaTime;
+
+        T_RD += Vector3.Distance(lastRealPosition, realbot.position);
+        lastRealPosition = realbot.position;
+
+        T_VD += Vector3.Distance(lastVirtualPosition, virtualbot.position);
+        lastVirtualPosition = virtualbot.position;
+
+        /* Transform realPosition = realbot.transform;
+        realPosition.position = virtualbot.position;
+        float realAngle = Vector3.Angle(target.position, realbot.forward);
+        float virtualAngle = Vector3.Angle(target.position, realPosition.forward);
+
+        Debug.Log(realAngle);
+        Debug.Log(virtualAngle); */ 
+
+    }
+
+    private void displayMetrics()
+    {
+        Debug.Log("T_TCT: " + T_TCT);
+        Debug.Log("T_RD: " + T_RD);
+        //Debug.Log("T_VD: " + T_VD);
+        //Debug.Log("Optimum: " + optimumPath);
+        Debug.Log("T_D: " + System.Math.Round((decimal)T_VD / (decimal)optimumPath,2));
+    }
 
     int wrapback(int n) {
         if (n < 0) {
@@ -68,6 +124,7 @@ public class Bot : MonoBehaviour
     void Start()
     {
         generateRandomFlagSeq(numTargets);
+        initialiseMetrics();
         // Shuffle();
         //flag_i = 0;
         ind = 0;
@@ -75,12 +132,14 @@ public class Bot : MonoBehaviour
         OrientToTarget();
         //prev_pos = flags[flag_i].position;
         prev_pos = target.position;
+        prev_location = virtualbot.position;
         done = false;
     }
 
     void FixedUpdate()
     {
         if (done) {
+            displayMetrics();  
             return;
         }
         // dist = Vector3.Distance(virtualbot.position, flags[flag_i].position);
@@ -89,6 +148,8 @@ public class Bot : MonoBehaviour
         speed_scale = 1;
         if (dist < 0.5f)
         {
+            optimumPath += Vector3.Distance(prev_location, virtualbot.position);
+            prev_location = virtualbot.position;
             prev_pos = virtualbot.position;
             ind += 1;
             if (ind >= flag_seq.Count) {
@@ -110,6 +171,8 @@ public class Bot : MonoBehaviour
         if (!rotating) {
             Move(speed_scale);    
         }
+
+        updateMetrics();
     }
 
     void Move(float speed_scale)
