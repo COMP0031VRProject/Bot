@@ -23,34 +23,39 @@ public class Bot : MonoBehaviour
     private bool done = true;
     private bool rotating = false;
 
+    // Metric variables 
     // Metrics 
     private float T_AD;   // Angle error
     private float T_TCT;  // Task completion time
     private float T_RD;   // Real distance travelled
     private float T_VD;   // Virtual distance travelled
+    private List<Metric> metricList;
     private Vector3 lastRealPosition;
     private Vector3 lastVirtualPosition;
+    private float timeAtFirstFlag;
     private float optimumPath;
-    public bool T_D;
+    private float T_D;
 
-
-    // Handle metrics here
-    void initialiseMetrics() {
+    void resetMetrics()
+    {
         T_TCT = 0.0f;
+        T_RD = 0.0f;
+        T_VD = 0.0f;
+        T_D = 0.0f;
+        optimumPath = 0.0f;
         lastRealPosition = realbot.position;
         lastVirtualPosition = virtualbot.position;
-
-        // Calculate optimum path
-        /*optimumPath = Vector3.Distance(virtualbot.position, flags[0].position);
-        for (int i = 0; i < flag_seq.Count -1; i++)
-        {
-            float distance = Vector3.Distance(flags[flag_seq[i]].position, flags[flag_seq[i + 1]].position);
-            optimumPath += distance;
-        } */
+      
 
     }
 
-    void updateMetrics(){
+    void updateMetrics()
+    {
+        if (ind == 1)
+        {
+            timeAtFirstFlag = Time.deltaTime;
+        }
+
         T_TCT += Time.deltaTime;
 
         T_RD += Vector3.Distance(lastRealPosition, realbot.position);
@@ -58,31 +63,49 @@ public class Bot : MonoBehaviour
 
         T_VD += Vector3.Distance(lastVirtualPosition, virtualbot.position);
         lastVirtualPosition = virtualbot.position;
-
-        /* Transform realPosition = realbot.transform;
-        realPosition.position = virtualbot.position;
-        float realAngle = Vector3.Angle(target.position, realbot.forward);
-        float virtualAngle = Vector3.Angle(target.position, realPosition.forward);
-
-        Debug.Log(realAngle);
-        Debug.Log(virtualAngle); */ 
-
     }
 
-    private void displayMetrics()
+    // Load current tests' metrics into list
+    void saveMetrics()
     {
-        Debug.Log("T_TCT: " + T_TCT);
+        T_D = (float)System.Math.Round((decimal)T_VD / (decimal)optimumPath, 3);
+        T_TCT -= timeAtFirstFlag;
+
+        // PAUL TODO: Add the scaling factor here
+        Metric metrics = new Metric
+        {
+            T_TCT = T_TCT,
+            T_RD = T_RD,
+            T_D = T_D
+        };
+
+        metricList.Add(metrics);
+        /*Debug.Log("T_TCT: " + T_TCT);
         Debug.Log("T_RD: " + T_RD);
-        //Debug.Log("T_VD: " + T_VD);
-        //Debug.Log("Optimum: " + optimumPath);
-        Debug.Log("T_D: " + System.Math.Round((decimal)T_VD / (decimal)optimumPath,2));
+        Debug.Log("T_VD: " + T_VD);
+        Debug.Log("Optimum: " + optimumPath);
+        Debug.Log("T_D: " + System.Math.Round((decimal)T_VD / (decimal)optimumPath, 2)); 8?*/
     }
+
+    void writeMetrics()
+    {
+        MetricWriter writer = new MetricWriter();
+        writer.writeToFile(metricList);
+    }
+
 
     int wrapback(int n) {
         if (n < 0) {
             return n + 6;
         } else {
             return n % 6;
+        }
+    }
+
+    void loadFixedFlagSeq(int n) {
+        //Using this to test whether simply adding flag sequences is good.
+        for (int i = 0; i < n; i++) {
+            flag_seq.Add(i);
         }
     }
 
@@ -124,7 +147,10 @@ public class Bot : MonoBehaviour
     void Start()
     {
         generateRandomFlagSeq(numTargets);
-        initialiseMetrics();
+        metricList = new List<Metric>();
+        resetMetrics();
+        loadFixedFlagSeq(numTargets);
+        // generateRandomFlagSeq(numTargets); //Temporary comment out to make room for trials
         // Shuffle();
         //flag_i = 0;
         ind = 0;
@@ -139,7 +165,9 @@ public class Bot : MonoBehaviour
     void FixedUpdate()
     {
         if (done) {
-            displayMetrics();  
+            saveMetrics();
+            writeMetrics();
+            Destroy(this);
             return;
         }
         // dist = Vector3.Distance(virtualbot.position, flags[flag_i].position);

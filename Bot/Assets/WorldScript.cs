@@ -17,9 +17,11 @@ public class WorldScript : MonoBehaviour
     public bool homogenous;
     public bool polygon_manipulation;
     public bool lattice_crushing;
-    public int n;
-    public int real_width_m;
-    public int scale;
+    // public int n;
+    
+    // Default Values, replaced in script with mesh.
+    public float real_width_m;
+    public float scale;
 
     private float offsetX;
     private float offsetZ;
@@ -37,7 +39,7 @@ public class WorldScript : MonoBehaviour
 
     void positionObjs()
     {
-        int dist = scale * 4; //Distance of flag {2m if scale = 2, 4m if scale = 4, etc...}
+        float dist = scale * (real_width_m / 2f - real_width_m * 0.1f); //Distance of Flag
         for (int i = 0; i < flags.Length; i++) {
             float x = Mathf.Cos(Mathf.PI/3 * i) * dist;
             float z = Mathf.Sin(Mathf.PI/3 * i) * dist;
@@ -61,8 +63,8 @@ public class WorldScript : MonoBehaviour
         realbot.position = realPlane.position + new Vector3(0, 0.9f, 0);
 
         // Place Camera
-        float pos_avg = 0.5f * (realPlane.position.x + virtualPlane.position.x);
-        camera.position = new Vector3(pos_avg + 2.5f, scale * 8 + 1, camera.position.z);
+        float pos_avg = -0.5f * real_width_m;
+        camera.position = new Vector3(pos_avg, scale * (0.8f * real_width_m) + 1, camera.position.z);
     }
 
 
@@ -85,6 +87,11 @@ public class WorldScript : MonoBehaviour
         Mesh virtualM = Newtonsoft.Json.JsonConvert.DeserializeObject<Mesh>(virtualJson.text);
         virtualMesh = new Mesh(virtualM.verts, virtualM.tInd);
 
+        //Updates the real_width_m (real space width in metres) from mesh
+        float real_max = (float) realM.getMax();
+        real_width_m = real_max * 2f;
+        //Updates the scaling factor 
+        scale = (float)virtualM.getMax() / real_max;
     }
 
     

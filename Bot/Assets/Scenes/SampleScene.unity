@@ -236,8 +236,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   virtualPlane: {fileID: 1325014574}
   realPlane: {fileID: 522699701}
-  virtualJson: {fileID: 4900000, guid: b6134b50e619a724fa13d530b78e01b5, type: 3}
-  realJson: {fileID: 4900000, guid: a87e4092035381e4c9574f9a64c6106a, type: 3}
+  virtualJson: {fileID: 4900000, guid: 5e57d4e97640d4327910c58d13168835, type: 3}
+  realJson: {fileID: 4900000, guid: dbb4a4d54fe4041b5ac170d24bb64420, type: 3}
   virtualbot: {fileID: 998156956}
   realbot: {fileID: 854079641}
   camera: {fileID: 963194228}
@@ -251,8 +251,7 @@ MonoBehaviour:
   homogenous: 1
   polygon_manipulation: 0
   lattice_crushing: 0
-  n: 20
-  real_width_m: 10
+  real_width_m: 5
   scale: 2
 --- !u!4 &142944726
 Transform:
@@ -290,7 +289,7 @@ MonoBehaviour:
   virtualbot: {fileID: 998156956}
   realbot: {fileID: 854079641}
   speed: 1.2
-  numTargets: 0
+  numTargets: 5
 --- !u!1 &214550351
 GameObject:
   m_ObjectHideFlags: 0
@@ -1347,7 +1346,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1296420215
 Transform:
   m_ObjectHideFlags: 0
