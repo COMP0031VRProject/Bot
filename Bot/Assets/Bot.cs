@@ -11,11 +11,12 @@ public class Bot : MonoBehaviour
     public Transform[] flags;
     public Transform virtualbot;
     public Transform realbot;
+    public Transform center;
     public float speed;
-    public int numTargets;
     
     // Intended to be temporary
     public TextAsset testJson;
+    
 
     // private int flag_i; //Unused in current situation
     private float speed_scale;
@@ -151,7 +152,7 @@ public class Bot : MonoBehaviour
         ind = 0;
         target = flags[flag_seq[ind]];
         OrientToTarget();
-        prev_pos = target.position;
+        prev_pos = center.position;
         prev_location = virtualbot.position;
         done = false;
     }
@@ -194,13 +195,18 @@ public class Bot : MonoBehaviour
         dist = Vector3.Distance(virtualbot.position, target.position);
         prev_dist = Vector3.Distance(virtualbot.position, prev_pos);
         speed_scale = 1;
-        if (dist < 0.5f)
+        if ((dist < 0.5f && ind != flag_seq.Count) || dist < 0.01f)
         {
             optimumPath += Vector3.Distance(prev_location, virtualbot.position);
             prev_location = virtualbot.position;
             prev_pos = virtualbot.position;
             ind += 1;
-            if (ind >= flag_seq.Count) {
+            if (ind == flag_seq.Count) {
+                // Case where we need to return to center
+                target = center;
+                return;
+            }
+            if (ind > flag_seq.Count) {
                 //Terminate current trial...
                 done = true;
                 return;
@@ -209,10 +215,16 @@ public class Bot : MonoBehaviour
             //IncreaseIndex();
             
         }
-        if (dist < 1.4f || prev_dist < 0.9f)
+        // Return to center speed scaling
+        if (dist < 0.9f && ind == flag_seq.Count) {
+            speed_scale = dist;
+        }
+        // Normal speed scaling
+        else if (dist < 1.4f || prev_dist < 0.9f)
         {
             speed_scale = Mathf.Min(dist, prev_dist + 0.5f) - 0.4f;
         }
+        
 
        // Debug.Log(virtualbot.position.x);
         OrientToTarget(); //Orient every single fixed update
@@ -227,17 +239,6 @@ public class Bot : MonoBehaviour
     {
         realbot.Translate(Vector3.forward * speed * speed_scale * Time.deltaTime);
     }
-
-    // void IncreaseIndex()
-    // {
-    //     flag_i++;
-    //     if (flag_i >= flags.Length)
-    //     {
-    //         Shuffle();
-    //         flag_i = 0;
-    //     }
-    //     // OrientToTarget();
-    // }
 
     float getRotTarget(float diffX, float diffZ) {
         //This here figures out the absolute rotation target.
