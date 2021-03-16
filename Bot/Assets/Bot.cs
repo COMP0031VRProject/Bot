@@ -13,6 +13,7 @@ public class Bot : MonoBehaviour
     public Transform realbot;
     public float speed;
     public int numTargets;
+    public float scale;
 
     // private int flag_i; //Unused in current situation
     private float speed_scale;
@@ -40,6 +41,22 @@ public class Bot : MonoBehaviour
     private bool tff_set = false;
     private float optimumPath;
     private float T_D; // (T_VD / optimumPath)
+    private float T_SF; // Scaling factor
+
+    // private init_flag = false;
+
+    // Due to problems with constructors in monobehaviour, I'll abandon this approach for now
+    //Create a constructor for the bot class
+    /*
+    public Bot Bot(Transform[] flags, Transform virtualbot, Transform realbot, float speed, int numTargets) {
+        this.flags = flags;
+        this.virtualbot = virtualbot;
+        this.realbot = realbot;
+        this.speed = speed;
+        this.numTargets = numTargets;
+    }
+    */
+    
 
     void resetMetrics()
     {
@@ -78,6 +95,7 @@ public class Bot : MonoBehaviour
         // PAUL TODO: Add the scaling factor here
         Metric metrics = new Metric
         {
+            T_SF = scale,
             T_TCT = T_TCT,
             T_RD = T_RD,
             T_D = T_D
@@ -274,8 +292,6 @@ public class Bot : MonoBehaviour
         } else {
             rotating = false; //Can start moving again.
         }
-
-        
 
         //Select the most efficient rotation direction
         if (angleDiff > 180) {

@@ -30,14 +30,20 @@ public class WorldScript : MonoBehaviour
     private float offsetX;
     private float offsetZ;
 
+    /*// What if I initialise the botscript within worldscript?
+    private Bot bot;
+    public float bot_speed;
+    public int bot_numTargets;
+    */
+
     void Start()
     {
         readMeshFiles();
 
         positionObjs(); //Position the flags and camera correctly
-        // Create all meshes for the environment
-        //generate_meshes();
-
+        
+        //Then create our botscript (constructor running into problems, will hardcode scale for now)
+        // bot = gameObject.AddComponent(typeof(Bot(flags, virtualbot, realbot, bot_speed, bot_numTargets)));        
     }
 
 
@@ -96,6 +102,7 @@ public class WorldScript : MonoBehaviour
         real_width_m = real_max * 2f;
         //Updates the scaling factor 
         scale = (float)virtualM.getMax() / real_max;
+        Debug.Log("The Scale is: " + scale);
     }
 
     
