@@ -13,7 +13,10 @@ public class Bot : MonoBehaviour
     public Transform realbot;
     public float speed;
     public int numTargets;
+    
+    // Intended to be temporary
     public float scale;
+    public TextAsset testJson;
 
     // private int flag_i; //Unused in current situation
     private float speed_scale;
@@ -43,7 +46,8 @@ public class Bot : MonoBehaviour
     private float T_D; // (T_VD / optimumPath)
     private float T_SF; // Scaling factor
 
-    // private init_flag = false;
+    //Test suite
+    private TestSuite suite;
 
     // Due to problems with constructors in monobehaviour, I'll abandon this approach for now
     //Create a constructor for the bot class
@@ -56,6 +60,16 @@ public class Bot : MonoBehaviour
         this.numTargets = numTargets;
     }
     */
+
+    void readTestSuite() {
+        //Do deserialisation and setting appropriate variables here...
+        suite = Newtonsoft.Json.JsonConvert.DeserializeObject<TestSuite>(testJson.text);
+        Debug.Log("Suite ID: " + suite.suite_id);
+        Debug.Log("Trials 1 id: " + suite.trials[0].id);
+        Debug.Log("Trials 1 sequence [0]: " + suite.trials[0].sequence[0]);
+        Debug.Log("Trials 1 sequence [1]: " + suite.trials[0].sequence[1]);
+        Debug.Log("Trials 1 sequence [2]: " + suite.trials[0].sequence[2]);
+    }
     
 
     void resetMetrics()
@@ -171,6 +185,9 @@ public class Bot : MonoBehaviour
     
     void Start()
     {
+        // Test out our reading function
+        readTestSuite();
+        
         loadFixedFlagSeq(numTargets); // This is a placeholder for loading fixed sequence. 
         metricList = new List<Metric>();
         resetMetrics();
