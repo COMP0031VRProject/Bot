@@ -103,6 +103,8 @@ public class WorldScript : MonoBehaviour
         //Updates the scaling factor 
         scale = (float)virtualM.getMax() / real_max;
         Debug.Log("The Scale is: " + scale);
+
+        gameObject.GetComponent<Bot>().setScale(scale);
     }
 
     

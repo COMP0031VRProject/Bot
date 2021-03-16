@@ -15,7 +15,6 @@ public class Bot : MonoBehaviour
     public int numTargets;
     
     // Intended to be temporary
-    public float scale;
     public TextAsset testJson;
 
     // private int flag_i; //Unused in current situation
@@ -53,17 +52,10 @@ public class Bot : MonoBehaviour
     private Vector3 virtualStart;
     private Vector3 realStart;
 
-    // Due to problems with constructors in monobehaviour, I'll abandon this approach for now
-    //Create a constructor for the bot class
-    /*
-    public Bot Bot(Transform[] flags, Transform virtualbot, Transform realbot, float speed, int numTargets) {
-        this.flags = flags;
-        this.virtualbot = virtualbot;
-        this.realbot = realbot;
-        this.speed = speed;
-        this.numTargets = numTargets;
+    public void setScale(float scale) {
+        T_SF = scale;
+        Debug.Log("This is the scale being set in bot: " + T_SF);
     }
-    */
 
     void readTestSuite() {
         //Do deserialisation and setting appropriate variables here...
@@ -116,7 +108,7 @@ public class Bot : MonoBehaviour
         // PAUL TODO: Add the scaling factor here
         Metric metrics = new Metric
         {
-            T_SF = scale,
+            T_SF = T_SF,
             T_TCT = T_TCT,
             T_RD = T_RD,
             T_D = T_D
@@ -150,44 +142,6 @@ public class Bot : MonoBehaviour
         int trial_ind = trial_no - 1; //Trial id starts at 1, but trial index starts at 0;
         flag_seq = suite.trials[trial_ind].getFlagSeq();
     }
-
-    //This has been replaced with YT test trials
-    /*
-    void generateRandomFlagSeq(int n) {
-        //n is number of flags in sequence, either 3 or 5.
-        System.Random rnd = new System.Random();
-        int flag1 = rnd.Next(6);
-        flag_seq.Add(flag1);
-        int flag2 = (flag1-1) + rnd.Next(2) * 2;
-        flag2 = wrapback(flag2);
-        flag_seq.Add(flag2);
-        int flag3 = (flag2-1) + rnd.Next(2) * 2;
-        flag3 = wrapback(flag3);
-        flag_seq.Add(flag3);
-        if (n == 5) {
-            int flag4 = (flag3 - 2) + rnd.Next(2) * 4;
-            flag4 = wrapback(flag4);
-            flag_seq.Add(flag4);
-            int flag5 = (flag4 + 3) % 6;
-            flag_seq.Add(flag5);
-        }
-    }
-    */
-
-    // void Shuffle() {
-    //     System.Random rnd = new System.Random();
-    //     for (int i = flags.Length - 1; i > 0; i--)
-    //     {
-    //         int rand_i = rnd.Next(i + 1);
-    //         if (rand_i == flags.Length - 1) {
-    //             //Prevent case where there's two consecutive flags chosen
-    //             rand_i = 0;
-    //         }
-    //         Transform temp = flags[i];
-    //         flags[i] = flags[rand_i];
-    //         flags[rand_i] = temp;
-    //     }
-    // }
     
     // initTrial: Loads targets, zeros metrics and bot indicies, orient the bot to target
     // setup the prev_pos and prev_location vars, then undo done flag to start the next trial.

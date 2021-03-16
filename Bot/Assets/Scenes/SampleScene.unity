@@ -290,7 +290,7 @@ MonoBehaviour:
   realbot: {fileID: 854079641}
   speed: 1.5
   numTargets: 3
-  scale: 2
+  testJson: {fileID: 4900000, guid: e2e545f0503744eaea0a27cd74986de4, type: 3}
 --- !u!1 &214550351
 GameObject:
   m_ObjectHideFlags: 0
@@ -474,7 +474,7 @@ MonoBehaviour:
   realbot: {fileID: 0}
   speed: 4
   numTargets: 0
-  scale: 0
+  testJson: {fileID: 0}
 --- !u!135 &490266591
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1162,7 +1162,7 @@ MonoBehaviour:
   realbot: {fileID: 0}
   speed: 3
   numTargets: 0
-  scale: 0
+  testJson: {fileID: 0}
 --- !u!65 &998156953
 BoxCollider:
   m_ObjectHideFlags: 0
