@@ -64,11 +64,13 @@ public class Bot : MonoBehaviour
     void readTestSuite() {
         //Do deserialisation and setting appropriate variables here...
         suite = Newtonsoft.Json.JsonConvert.DeserializeObject<TestSuite>(testJson.text);
+        /*
         Debug.Log("Suite ID: " + suite.suite_id);
         Debug.Log("Trials 1 id: " + suite.trials[0].id);
         Debug.Log("Trials 1 sequence [0]: " + suite.trials[0].sequence[0]);
         Debug.Log("Trials 1 sequence [1]: " + suite.trials[0].sequence[1]);
         Debug.Log("Trials 1 sequence [2]: " + suite.trials[0].sequence[2]);
+        */
     }
     
 
@@ -139,10 +141,15 @@ public class Bot : MonoBehaviour
     }
 
     void loadFixedFlagSeq(int n) {
+        //Load the first flag sequence in the test suite
+        flag_seq = suite.trials[0].getFlagSeq();
+
         //Using this to test whether simply adding flag sequences is good.
+        /*
         for (int i = 0; i < n; i++) {
             flag_seq.Add(i);
-        }
+        }*/
+        
     }
 
     //This has been replaced with YT test trials
