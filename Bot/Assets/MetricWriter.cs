@@ -1,4 +1,7 @@
-﻿using System.Collections;
+﻿/*
+    This is an object created for writing json format metrics to "metrics.json"
+*/
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;

@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿/*
+    This class stores the mesh object, which is directly deserialised in Worldscript.
+    Defines a simple operation for getting the max displacement (helper to compute scaling)
+*/
+using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;

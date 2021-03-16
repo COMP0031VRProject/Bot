@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿/*
+    This is the prototypical script for the bot metrics implementation.
+    Currently unused, but linked to a hidden "metrics" object in the scene.
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -67,6 +72,6 @@ public class RecordMetrics : MonoBehaviour
 
     private void OnDestroy()
     {
-        
+
     }
 }

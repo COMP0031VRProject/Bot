@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿/* 
+    This is the script that handles most of the bot movement, and recording metrics.
+    Translation of the real to virtual position for the bot is currently performed in Worldscript.
+*/
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 

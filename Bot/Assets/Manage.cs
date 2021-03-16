@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿/*
+    Currently unused, appears to be prototypical script for something...
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 

@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿/*
+    Initialises the Object Positions, and updates our virtual bot position based on realbot.
+    Note: Perhaps realbot translation could be transferred over into bot script?
+*/
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 

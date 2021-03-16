@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿/* 
+    This was written as an experimental script for adding delayed teleportation of unity objects.
+    Currently not used in implementation of the bot or metrics. 
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
