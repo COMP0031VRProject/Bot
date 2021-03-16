@@ -9,6 +9,7 @@ using UnityEngine;
 
 public class Metric
 {
+    public int id { get; set; }
     public float T_SF { get; set; }
     public float T_TCT { get; set; }
     public float T_RD { get; set; }

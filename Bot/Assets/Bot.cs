@@ -13,10 +13,7 @@ public class Bot : MonoBehaviour
     public Transform realbot;
     public Transform center;
     public float speed;
-    
-    // Intended to be temporary
     public TextAsset testJson;
-    
 
     // private int flag_i; //Unused in current situation
     private float speed_scale;
@@ -109,6 +106,7 @@ public class Bot : MonoBehaviour
         // PAUL TODO: Add the scaling factor here
         Metric metrics = new Metric
         {
+            id = trial_no,
             T_SF = T_SF,
             T_TCT = T_TCT,
             T_RD = T_RD,

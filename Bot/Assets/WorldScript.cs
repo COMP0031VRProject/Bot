@@ -39,11 +39,7 @@ public class WorldScript : MonoBehaviour
     void Start()
     {
         readMeshFiles();
-
         positionObjs(); //Position the flags and camera correctly
-        
-        //Then create our botscript (constructor running into problems, will hardcode scale for now)
-        // bot = gameObject.AddComponent(typeof(Bot(flags, virtualbot, realbot, bot_speed, bot_numTargets)));        
     }
 
 
