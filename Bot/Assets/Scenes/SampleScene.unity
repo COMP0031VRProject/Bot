@@ -236,8 +236,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   virtualPlane: {fileID: 1325014574}
   realPlane: {fileID: 522699701}
-  virtualJson: {fileID: 4900000, guid: 5e57d4e97640d4327910c58d13168835, type: 3}
-  realJson: {fileID: 4900000, guid: dbb4a4d54fe4041b5ac170d24bb64420, type: 3}
+  virtualJson: {fileID: 4900000, guid: 397bf4480f8979441bd9e2864251095a, type: 3}
+  realJson: {fileID: 4900000, guid: 4f5c29942ddcc3148b13b98a9636baab, type: 3}
   virtualbot: {fileID: 998156956}
   realbot: {fileID: 854079641}
   camera: {fileID: 963194228}
@@ -288,8 +288,8 @@ MonoBehaviour:
   - {fileID: 1987534464}
   virtualbot: {fileID: 998156956}
   realbot: {fileID: 854079641}
-  speed: 1.2
-  numTargets: 5
+  speed: 1.5
+  numTargets: 3
 --- !u!1 &214550351
 GameObject:
   m_ObjectHideFlags: 0
@@ -314,14 +314,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 214550351}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 915890a770e7b3748b890344f191492d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  T_AD: 0
-  T_TCT: 0
-  T_RD: 0
+  realbot: {fileID: 854079641}
+  virtualbot: {fileID: 998156956}
   T_D: 0
 --- !u!4 &214550353
 Transform:

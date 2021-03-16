@@ -37,8 +37,9 @@ public class Bot : MonoBehaviour
     private Vector3 lastRealPosition;
     private Vector3 lastVirtualPosition;
     private float timeAtFirstFlag;
+    private bool tff_set = false;
     private float optimumPath;
-    private float T_D;
+    private float T_D; // (T_VD / optimumPath)
 
     void resetMetrics()
     {
@@ -49,15 +50,14 @@ public class Bot : MonoBehaviour
         optimumPath = 0.0f;
         lastRealPosition = realbot.position;
         lastVirtualPosition = virtualbot.position;
-      
-
     }
 
     void updateMetrics()
     {
-        if (ind == 1)
+        if (ind == 1 && !tff_set)
         {
-            timeAtFirstFlag = Time.deltaTime;
+            timeAtFirstFlag = T_TCT;
+            tff_set = true;
         }
 
         T_TCT += Time.deltaTime;
@@ -113,6 +113,8 @@ public class Bot : MonoBehaviour
         }
     }
 
+    //This has been replaced with YT test trials
+    /*
     void generateRandomFlagSeq(int n) {
         //n is number of flags in sequence, either 3 or 5.
         System.Random rnd = new System.Random();
@@ -132,6 +134,7 @@ public class Bot : MonoBehaviour
             flag_seq.Add(flag5);
         }
     }
+    */
 
     // void Shuffle() {
     //     System.Random rnd = new System.Random();
@@ -150,10 +153,9 @@ public class Bot : MonoBehaviour
     
     void Start()
     {
-        generateRandomFlagSeq(numTargets);
+        loadFixedFlagSeq(numTargets); // This is a placeholder for loading fixed sequence. 
         metricList = new List<Metric>();
         resetMetrics();
-        loadFixedFlagSeq(numTargets);
         // generateRandomFlagSeq(numTargets); //Temporary comment out to make room for trials
         // Shuffle();
         //flag_i = 0;
@@ -171,8 +173,10 @@ public class Bot : MonoBehaviour
         if (done) {
             saveMetrics();
             writeMetrics();
-            Destroy(this);
-            return;
+            Debug.Log("Finished Writing Metrics to File!");
+            Debug.Break(); //Stops running at runtime.
+            return; // Should not reach this line in theory..
+            
         }
         // dist = Vector3.Distance(virtualbot.position, flags[flag_i].position);
         dist = Vector3.Distance(virtualbot.position, target.position);
