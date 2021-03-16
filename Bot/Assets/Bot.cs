@@ -48,6 +48,10 @@ public class Bot : MonoBehaviour
 
     //Test suite
     private TestSuite suite;
+    private int trial_no = 1;
+
+    private Vector3 virtualStart;
+    private Vector3 realStart;
 
     // Due to problems with constructors in monobehaviour, I'll abandon this approach for now
     //Create a constructor for the bot class
@@ -64,6 +68,7 @@ public class Bot : MonoBehaviour
     void readTestSuite() {
         //Do deserialisation and setting appropriate variables here...
         suite = Newtonsoft.Json.JsonConvert.DeserializeObject<TestSuite>(testJson.text);
+        // Debug.Log("Number of Trials in Suite: " + suite.trials.Count); 
         /*
         Debug.Log("Suite ID: " + suite.suite_id);
         Debug.Log("Trials 1 id: " + suite.trials[0].id);
@@ -140,16 +145,10 @@ public class Bot : MonoBehaviour
         }
     }
 
-    void loadFixedFlagSeq(int n) {
-        //Load the first flag sequence in the test suite
-        flag_seq = suite.trials[0].getFlagSeq();
-
-        //Using this to test whether simply adding flag sequences is good.
-        /*
-        for (int i = 0; i < n; i++) {
-            flag_seq.Add(i);
-        }*/
-        
+    void loadFixedFlagSeq(int trial_no) {
+        //Load the trial_ind flag sequence in the test suite
+        int trial_ind = trial_no - 1; //Trial id starts at 1, but trial index starts at 0;
+        flag_seq = suite.trials[trial_ind].getFlagSeq();
     }
 
     //This has been replaced with YT test trials
@@ -190,36 +189,53 @@ public class Bot : MonoBehaviour
     //     }
     // }
     
-    void Start()
-    {
-        // Test out our reading function
-        readTestSuite();
-        
-        loadFixedFlagSeq(numTargets); // This is a placeholder for loading fixed sequence. 
-        metricList = new List<Metric>();
+    // initTrial: Loads targets, zeros metrics and bot indicies, orient the bot to target
+    // setup the prev_pos and prev_location vars, then undo done flag to start the next trial.
+    void initTrial() {
+        loadFixedFlagSeq(trial_no);
         resetMetrics();
-        // generateRandomFlagSeq(numTargets); //Temporary comment out to make room for trials
-        // Shuffle();
-        //flag_i = 0;
         ind = 0;
         target = flags[flag_seq[ind]];
         OrientToTarget();
-        //prev_pos = flags[flag_i].position;
         prev_pos = target.position;
         prev_location = virtualbot.position;
         done = false;
     }
 
+    void Start()
+    {
+        // Test out our reading function
+        readTestSuite();
+        metricList = new List<Metric>();
+        // Set the starting positions
+        virtualStart = virtualbot.position;
+        realStart = realbot.position;
+        // Initiate the trial
+        initTrial();
+    }
+
     void FixedUpdate()
     {
         if (done) {
-            saveMetrics();
-            writeMetrics();
-            Debug.Log("Finished Writing Metrics to File!");
-            Debug.Break(); //Stops running at runtime.
-            return; // Should not reach this line in theory..
-            
+            if (trial_no == suite.trials.Count) {
+                saveMetrics();
+                writeMetrics();
+                Debug.Log("Finished Writing Metrics to File!");
+                Debug.Break(); //Stops running at runtime.
+                return; // Should not reach this line in theory..  
+            } else {
+                //Save our metrics
+                saveMetrics();
+                // Increment the trial_no
+                trial_no += 1;
+                //Reset position of virtualbot and realbot...
+                virtualbot.position = virtualStart;
+                realbot.position = realStart;
+                // Init Trial
+                initTrial();
+            }
         }
+        
         // dist = Vector3.Distance(virtualbot.position, flags[flag_i].position);
         dist = Vector3.Distance(virtualbot.position, target.position);
         prev_dist = Vector3.Distance(virtualbot.position, prev_pos);
@@ -231,7 +247,7 @@ public class Bot : MonoBehaviour
             prev_pos = virtualbot.position;
             ind += 1;
             if (ind >= flag_seq.Count) {
-                //Terminate program
+                //Terminate current trial...
                 done = true;
                 return;
             }
