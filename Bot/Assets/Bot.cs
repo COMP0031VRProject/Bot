@@ -30,7 +30,7 @@ public class Bot : MonoBehaviour
 
     // Metric variables 
     // Metrics 
-    private float T_AD;   // Angle error
+    private List<float> T_AD;   // Angle error
     private float T_TCT;  // Task completion time
     private float T_RD;   // Real distance travelled
     private float T_VD;   // Virtual distance travelled
@@ -76,6 +76,7 @@ public class Bot : MonoBehaviour
         T_VD = 0.0f;
         T_D = 0.0f;
         optimumPath = 0.0f;
+        T_AD = new List<float>();
         lastRealPosition = realbot.position;
         lastVirtualPosition = virtualbot.position;
     }
@@ -87,6 +88,11 @@ public class Bot : MonoBehaviour
             timeAtFirstFlag = T_TCT;
             tff_set = true;
         }
+
+        Vector3 realPath = realbot.position - lastRealPosition;
+        Vector3 virtualPath = virtualbot.position - lastVirtualPosition;
+        float angleError = Vector3.Angle(virtualPath, realPath);
+        T_AD.Add(angleError);
 
         T_TCT += Time.deltaTime;
 
@@ -110,6 +116,7 @@ public class Bot : MonoBehaviour
             T_SF = T_SF,
             T_TCT = T_TCT,
             T_RD = T_RD,
+            T_AD = T_AD,
             T_D = T_D
         };
 
