@@ -124,7 +124,7 @@ public class Bot : MonoBehaviour
     void writeMetrics()
     {
         MetricWriter writer = new MetricWriter();
-        writer.writeToFile(metricList);
+        writer.writeToFile(metricList, suite.suite_id);
     }
 
 

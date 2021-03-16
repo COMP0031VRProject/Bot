@@ -67,7 +67,7 @@ public class RecordMetrics : MonoBehaviour
     private void writeMetrics()
     {
         MetricWriter writer = new MetricWriter();
-        writer.writeToFile(metricList);
+        writer.writeToFile(metricList, 1);
     }
 
     private void OnDestroy()

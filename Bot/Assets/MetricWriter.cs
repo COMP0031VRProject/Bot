@@ -9,9 +9,9 @@ using System.IO;
 public class MetricWriter
 {
     private string filePath = Application.dataPath;
-    public void writeToFile(List<Metric> metrics)
+    public void writeToFile(List<Metric> metrics, int suite_id)
     {
-        filePath += "/MetricFiles/metrics.json";
+        filePath += "/MetricFiles/TestSuite_" + suite_id.ToString() + "_metrics.json";
         string metricJson = Newtonsoft.Json.JsonConvert.SerializeObject(metrics);
         File.WriteAllText(filePath, metricJson);
     }
