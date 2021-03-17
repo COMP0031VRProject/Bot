@@ -206,23 +206,22 @@ public class Bot : MonoBehaviour
             prev_location = virtualbot.position;
             prev_pos = virtualbot.position;
             ind += 1;
-            if (ind == flag_seq.Count) {
+            if (ind < flag_seq.Count) {
+                target = flags[flag_seq[ind]];
+            }
+            else if (ind == flag_seq.Count) {
                 // Case where we need to return to center
                 target = center;
-                return;
             }
-            if (ind > flag_seq.Count) {
+            else if (ind > flag_seq.Count) {
                 //Terminate current trial...
                 done = true;
                 return;
             }
-            target = flags[flag_seq[ind]];
-            //IncreaseIndex();
-            
         }
         // Return to center speed scaling
         if (dist < 0.9f && ind == flag_seq.Count) {
-            speed_scale = dist;
+            speed_scale = dist + 0.1f; //Ensures at least 0.1 sf
         }
         // Normal speed scaling
         else if (dist < 1.4f || prev_dist < 0.9f)
