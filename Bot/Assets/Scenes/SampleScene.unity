@@ -270,7 +270,7 @@ MonoBehaviour:
   realJson: {fileID: 4900000, guid: 4f5c29942ddcc3148b13b98a9636baab, type: 3}
   virtualbot: {fileID: 998156956}
   realbot: {fileID: 854079641}
-  camera: {fileID: 963194228}
+  birdeyeCamera: {fileID: 963194228}
   flags:
   - {fileID: 1702631329}
   - {fileID: 321280736}

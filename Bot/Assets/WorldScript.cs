@@ -16,7 +16,7 @@ public class WorldScript : MonoBehaviour
     public TextAsset realJson;
     public Transform virtualbot;
     public Transform realbot;
-    public Transform camera;
+    public Transform birdeyeCamera;
     public Transform[] flags;
     public bool homogenous;
     public bool polygon_manipulation;
@@ -70,7 +70,7 @@ public class WorldScript : MonoBehaviour
 
         // Place Camera
         float pos_avg = -0.5f * real_width_m;
-        camera.position = new Vector3(pos_avg, scale * (0.8f * real_width_m) + 1, camera.position.z);
+        birdeyeCamera.position = new Vector3(pos_avg, scale * (0.8f * real_width_m) + 1, birdeyeCamera.position.z);
     }
 
 
