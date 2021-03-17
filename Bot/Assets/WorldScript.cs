@@ -91,6 +91,14 @@ public class WorldScript : MonoBehaviour
         gameObject.GetComponent<Bot>().setScale(scale);
     }
 
+    public List<decimal> getVirtualCoord() {
+        return new List<decimal> {(decimal) virtualbot.position.x, (decimal) virtualbot.position.z};
+    }
+    
+    public List<decimal> getRealCoord() {
+        return new List<decimal> {(decimal) (realbot.position.x + offsetX), (decimal) (realbot.position.z + offsetZ)};
+    }
+
     public List<decimal> real2Virtual(Transform pos)
     {
 

@@ -48,6 +48,11 @@ public class Bot : MonoBehaviour
     private Vector3 virtualStart;
     private Vector3 realStart;
 
+    // Coords Vars
+    private List<CoordRec> coordRecs = new List<CoordRec>();
+    private List<List<decimal>> coords_R;
+    private List<List<decimal>> coords_V;
+
     public void setScale(float scale) {
         T_SF = scale;
         Debug.Log("This is the scale being set in bot: " + T_SF);
@@ -118,10 +123,36 @@ public class Bot : MonoBehaviour
         Debug.Log("T_D: " + System.Math.Round((decimal)T_VD / (decimal)optimumPath, 2)); 8?*/
     }
 
+    void resetCoordRec(){
+        coords_R = new List<List<decimal>>();
+        coords_V = new List<List<decimal>>();
+    }
+
+    void updateCoordRec(){
+        coords_R.Add(gameObject.GetComponent<WorldScript>().getRealCoord());
+        coords_V.Add(gameObject.GetComponent<WorldScript>().getVirtualCoord());
+    }
+
+    void saveCoordRec() {
+        CoordRec cr = new CoordRec {
+            trial_id = trial_no,
+            coords_R = coords_R,
+            coords_V = coords_V  
+        };
+
+        coordRecs.Add(cr);
+    }
+
     void writeMetrics()
     {
         MetricWriter writer = new MetricWriter();
         writer.writeToFile(metricList, suite.suite_id);
+    }
+
+    void writeCRs()
+    {
+        CRWriter writer = new CRWriter();
+        writer.writeToFile(coordRecs, suite.suite_id);
     }
 
 
@@ -142,8 +173,10 @@ public class Bot : MonoBehaviour
     // initTrial: Loads targets, zeros metrics and bot indicies, orient the bot to target
     // setup the prev_pos and prev_location vars, then undo done flag to start the next trial.
     void initTrial() {
+        Debug.Log("Trial " + trial_no + " of " + suite.trials.Count); //Help get a sense of progress
         loadFixedFlagSeq(trial_no);
         resetMetrics();
+        resetCoordRec();
         ind = 0;
         target = flags[flag_seq[ind]];
         OrientToTarget();
@@ -157,6 +190,7 @@ public class Bot : MonoBehaviour
         // Test out our reading function
         readTestSuite();
         metricList = new List<Metric>();
+        coordRecs = new List<CoordRec>();
         // Set the starting positions
         virtualStart = virtualbot.position;
         realStart = realbot.position;
@@ -178,13 +212,17 @@ public class Bot : MonoBehaviour
         if (done) {
             if (trial_no == suite.trials.Count) {
                 saveMetrics();
+                saveCoordRec();
                 writeMetrics();
                 Debug.Log("Finished Writing Metrics to File!");
+                writeCRs();
+                Debug.Log("Finished Writing CRs to File!");
                 Debug.Break(); //Stops running at runtime.
                 return; // Should not reach this line in theory..  
             } else {
                 //Save our metrics
                 saveMetrics();
+                saveCoordRec();
                 // Increment the trial_no
                 trial_no += 1;
                 //Reset position of virtualbot and realbot...
@@ -237,6 +275,7 @@ public class Bot : MonoBehaviour
         }
 
         updateMetrics();
+        updateCoordRec(); //Whenever we update metrics, update CoordRec
     }
 
     void Move(float speed_scale)
