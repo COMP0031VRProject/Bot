@@ -164,6 +164,15 @@ public class Bot : MonoBehaviour
         initTrial();
     }
 
+    void updateVirtual() {
+        // Map the real bot to virtual bot 50 frames per second
+        List<decimal> coordinates = new List<decimal>();
+        coordinates = gameObject.GetComponent<WorldScript>().real2Virtual(realbot);
+        if (coordinates != null) {
+            virtualbot.position = new Vector3((float)coordinates[0], virtualbot.position.y, (float)coordinates[1]);
+        }
+    }
+
     void FixedUpdate()
     {
         if (done) {
@@ -223,7 +232,8 @@ public class Bot : MonoBehaviour
        // Debug.Log(virtualbot.position.x);
         OrientToTarget(); //Orient every single fixed update
         if (!rotating) {
-            Move(speed_scale);    
+            Move(speed_scale);
+            updateVirtual();
         }
 
         updateMetrics();

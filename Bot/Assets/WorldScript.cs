@@ -73,18 +73,6 @@ public class WorldScript : MonoBehaviour
         birdeyeCamera.position = new Vector3(pos_avg, scale * (0.8f * real_width_m) + 1, birdeyeCamera.position.z);
     }
 
-
-
-    void FixedUpdate()
-    {
-        // Map the real bot to virtual bot 50 frames per second
-        List<decimal> coordinates = new List<decimal>();
-        coordinates = real2Virtual(realbot);
-        if (coordinates != null) {
-            virtualbot.position = new Vector3((float)coordinates[0], virtualbot.position.y, (float)coordinates[1]);
-        }
-    }
-
     void readMeshFiles()
     {
         // Create meshes from json files 
@@ -103,38 +91,7 @@ public class WorldScript : MonoBehaviour
         gameObject.GetComponent<Bot>().setScale(scale);
     }
 
-    
-   /*
-    void generate_meshes()
-    {
-        Utils util = new Utils();
-
-        virtualMesh = util.generate_embedded_polygon_mesh(20, 5, 2, (0, 0));
-        realMesh = util.generate_embedded_polygon_mesh(20, 5, 2, (0, 0));
-
-
-        // Homogenous or polygon manipulation
-        List<decimal> center = realMesh.verts[0];
-
-        for (int i = 0; i < realMesh.verts.Count; i++)
-        {
-            decimal x = (realMesh.verts[i][0] - center[0]) / (scale + center[0]);
-            decimal y = (realMesh.verts[i][1] - center[1]) / (scale + center[1]);
-            realMesh.verts[i] = (x, y);
-        }
-
-        if (polygon_manipulation)
-        {
-            for (int i = 0; i <= n; i++)
-            {
-                (decimal x, decimal y) = realMesh.verts[i];
-                realMesh.verts[i] = ((x - center[0]) * scale + center[0], (y - center[1]) * scale + center[1]);
-            }
-        }
-        
-    } */
-
-    List<decimal> real2Virtual(Transform pos)
+    public List<decimal> real2Virtual(Transform pos)
     {
 
         Utils util = new Utils();
