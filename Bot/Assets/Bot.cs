@@ -37,8 +37,6 @@ public class Bot : MonoBehaviour
     private List<Metric> metricList;
     private Vector3 lastRealPosition;
     private Vector3 lastVirtualPosition;
-    private float timeAtFirstFlag;
-    private bool tff_set = false;
     private float optimumPath;
     private float T_D; // (T_VD / optimumPath)
     private float T_SF; // Scaling factor
@@ -83,12 +81,6 @@ public class Bot : MonoBehaviour
 
     void updateMetrics()
     {
-        if (ind == 1 && !tff_set)
-        {
-            timeAtFirstFlag = T_TCT;
-            tff_set = true;
-        }
-
         Vector3 realPath = realbot.position - lastRealPosition;
         Vector3 virtualPath = virtualbot.position - lastVirtualPosition;
         float angleError = Vector3.Angle(virtualPath, realPath);
@@ -107,9 +99,7 @@ public class Bot : MonoBehaviour
     void saveMetrics()
     {
         T_D = (float)System.Math.Round((decimal)T_VD / (decimal)optimumPath, 3);
-        T_TCT -= timeAtFirstFlag;
 
-        // PAUL TODO: Add the scaling factor here
         Metric metrics = new Metric
         {
             id = trial_no,
