@@ -320,7 +320,8 @@ MonoBehaviour:
   realbot: {fileID: 854079641}
   center: {fileID: 77961841}
   speed: 1.4
-  testJson: {fileID: 4900000, guid: 3df7174058fe341ce83fc403f7cfd38f, type: 3}
+  testJson: {fileID: 4900000, guid: af0751704d9764b58a1548f2723b7cb1, type: 3}
+  initTrialNo: 1
   tAcronym: PR
 --- !u!1 &321280732
 GameObject:
@@ -460,6 +461,7 @@ MonoBehaviour:
   center: {fileID: 0}
   speed: 4
   testJson: {fileID: 0}
+  initTrialNo: 0
   tAcronym: 
 --- !u!135 &490266591
 SphereCollider:
@@ -1149,6 +1151,7 @@ MonoBehaviour:
   center: {fileID: 0}
   speed: 3
   testJson: {fileID: 0}
+  initTrialNo: 0
   tAcronym: 
 --- !u!65 &998156953
 BoxCollider:
