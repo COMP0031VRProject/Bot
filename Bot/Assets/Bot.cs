@@ -92,7 +92,7 @@ public class Bot : MonoBehaviour
         float angleError = Vector3.Angle(virtualPath, realPath);
         T_AD.Add(angleError);
 
-        T_TCT += Time.deltaTime;
+        T_TCT += Time.fixedDeltaTime;
 
         T_RD += Vector3.Distance(lastRealPosition, realbot.position);
         lastRealPosition = realbot.position;
@@ -281,7 +281,7 @@ public class Bot : MonoBehaviour
 
     void Move(float speed_scale)
     {
-        realbot.Translate(Vector3.forward * speed * speed_scale * Time.deltaTime);
+        realbot.Translate(Vector3.forward * speed * speed_scale * Time.fixedDeltaTime);
     }
 
     float getRotTarget(float diffX, float diffZ) {

@@ -319,8 +319,8 @@ MonoBehaviour:
   virtualbot: {fileID: 998156956}
   realbot: {fileID: 854079641}
   center: {fileID: 77961841}
-  speed: 1.5
-  testJson: {fileID: 4900000, guid: 7a4f4f1ab79f1428baaa1aef4e3eba76, type: 3}
+  speed: 1.4
+  testJson: {fileID: 4900000, guid: 3df7174058fe341ce83fc403f7cfd38f, type: 3}
   tAcronym: PR
 --- !u!1 &321280732
 GameObject:
