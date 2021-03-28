@@ -14,6 +14,7 @@ public class Bot : MonoBehaviour
     public Transform center;
     public float speed;
     public TextAsset testJson;
+    public int initTrialNo;
     public string tAcronym;
 
     // private int flag_i; //Unused in current situation
@@ -53,6 +54,9 @@ public class Bot : MonoBehaviour
     private List<CoordRec> coordRecs = new List<CoordRec>();
     private List<List<decimal>> coords_R;
     private List<List<decimal>> coords_V;
+
+    // Parts (Spliting super long trials)
+    private int parts = 0;
 
     public void setScale(float scale) {
         T_SF = scale;
@@ -147,13 +151,13 @@ public class Bot : MonoBehaviour
     void writeMetrics()
     {
         MetricWriter writer = new MetricWriter();
-        writer.writeToFile(metricList, suite.suite_id, tAcronym);
+        writer.writeToFile(metricList, suite.suite_id, tAcronym, parts);
     }
 
     void writeCRs()
     {
         CRWriter writer = new CRWriter();
-        writer.writeToFile(coordRecs, suite.suite_id, tAcronym);
+        writer.writeToFile(coordRecs, suite.suite_id, tAcronym, parts);
     }
 
 
@@ -190,6 +194,15 @@ public class Bot : MonoBehaviour
     {
         // Test out our reading function
         readTestSuite();
+        if (suite.trials.Count > 75) {
+            if (initTrialNo > 75) {
+                parts = 2;
+                trial_no = initTrialNo;
+            }
+            else {
+                parts = 1;
+            }
+        } 
         metricList = new List<Metric>();
         coordRecs = new List<CoordRec>();
         // Set the starting positions
@@ -220,6 +233,27 @@ public class Bot : MonoBehaviour
                 Debug.Log("Finished Writing CRs to File!");
                 Debug.Break(); //Stops running at runtime.
                 return; // Should not reach this line in theory..  
+            } else if (trial_no == 75) {
+                // Save our Metrics
+                saveMetrics();
+                saveCoordRec();
+                // Write our Metrics to appropriate part..(parts set in start)
+                writeMetrics();
+                Debug.Log("Finished Writing Metrics Part 1 to file");
+                writeCRs();
+                Debug.Log("Finish Writing CRs Part 1 to File");
+                // Increment parts (so writers will write to part 2 next) and trial_no
+                parts += 1;
+                trial_no += 1;
+                // Empty MetricList and coordRecs (in case bug is caused by memory problem)
+                metricList = new List<Metric>();
+                coordRecs = new List<CoordRec>();
+                //Reset position of virtualbot and realbot...
+                virtualbot.position = virtualStart;
+                realbot.position = realStart;
+                // Init Trial
+                initTrial();
+
             } else {
                 //Save our metrics
                 saveMetrics();
@@ -326,7 +360,8 @@ public class Bot : MonoBehaviour
         //Debug.Log(targetAngle);
 
         float angleDiff = targetAngle - virtualbot.rotation.eulerAngles.y;
-        if (Mathf.Abs(angleDiff) >= maxRot) {
+        // Sometimes unfortunately angleDiff can be 360, which freezes the program. Take modulo below.
+        if ((Mathf.Abs(angleDiff) % 360) >= maxRot) {
             rotating = true;
         } else {
             rotating = false; //Can start moving again.
