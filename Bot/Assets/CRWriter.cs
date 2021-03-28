@@ -9,9 +9,9 @@ using System.IO;
 public class CRWriter
 {
     private string filePath = Application.dataPath;
-    public void writeToFile(List<CoordRec> CRs, int suite_id)
+    public void writeToFile(List<CoordRec> CRs, int suite_id, string tAcronym)
     {
-        filePath += "/MetricFiles/TestSuite_" + suite_id.ToString() + "_coords.json";
+        filePath += "/MetricFiles/" + tAcronym + "_TestSuite_" + suite_id.ToString() + "_coords.json";
         string coordJson = Newtonsoft.Json.JsonConvert.SerializeObject(CRs);
         File.WriteAllText(filePath, coordJson);
     }

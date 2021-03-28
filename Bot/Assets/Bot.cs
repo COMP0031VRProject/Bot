@@ -14,6 +14,7 @@ public class Bot : MonoBehaviour
     public Transform center;
     public float speed;
     public TextAsset testJson;
+    public string tAcronym;
 
     // private int flag_i; //Unused in current situation
     private float speed_scale;
@@ -146,13 +147,13 @@ public class Bot : MonoBehaviour
     void writeMetrics()
     {
         MetricWriter writer = new MetricWriter();
-        writer.writeToFile(metricList, suite.suite_id);
+        writer.writeToFile(metricList, suite.suite_id, tAcronym);
     }
 
     void writeCRs()
     {
         CRWriter writer = new CRWriter();
-        writer.writeToFile(coordRecs, suite.suite_id);
+        writer.writeToFile(coordRecs, suite.suite_id, tAcronym);
     }
 
 
