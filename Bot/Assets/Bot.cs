@@ -58,12 +58,14 @@ public class Bot : MonoBehaviour
     // Parts (Spliting super long trials)
     private int parts = 0;
 
-    public void setScale(float scale) {
+    public void setScale(float scale)
+    {
         T_SF = scale;
         Debug.Log("This is the scale being set in bot: " + T_SF);
     }
 
-    void readTestSuite() {
+    void readTestSuite()
+    {
         //Do deserialisation and setting appropriate variables here...
         suite = Newtonsoft.Json.JsonConvert.DeserializeObject<TestSuite>(testJson.text);
         // Debug.Log("Number of Trials in Suite: " + suite.trials.Count); 
@@ -75,7 +77,7 @@ public class Bot : MonoBehaviour
         Debug.Log("Trials 1 sequence [2]: " + suite.trials[0].sequence[2]);
         */
     }
-    
+
 
     void resetMetrics()
     {
@@ -128,21 +130,25 @@ public class Bot : MonoBehaviour
         Debug.Log("T_D: " + System.Math.Round((decimal)T_VD / (decimal)optimumPath, 2)); 8?*/
     }
 
-    void resetCoordRec(){
+    void resetCoordRec()
+    {
         coords_R = new List<List<decimal>>();
         coords_V = new List<List<decimal>>();
     }
 
-    void updateCoordRec(){
+    void updateCoordRec()
+    {
         coords_R.Add(gameObject.GetComponent<WorldScript>().getRealCoord());
         coords_V.Add(gameObject.GetComponent<WorldScript>().getVirtualCoord());
     }
 
-    void saveCoordRec() {
-        CoordRec cr = new CoordRec {
+    void saveCoordRec()
+    {
+        CoordRec cr = new CoordRec
+        {
             trial_id = trial_no,
             coords_R = coords_R,
-            coords_V = coords_V  
+            coords_V = coords_V
         };
 
         coordRecs.Add(cr);
@@ -161,23 +167,29 @@ public class Bot : MonoBehaviour
     }
 
 
-    int wrapback(int n) {
-        if (n < 0) {
+    int wrapback(int n)
+    {
+        if (n < 0)
+        {
             return n + 6;
-        } else {
+        }
+        else
+        {
             return n % 6;
         }
     }
 
-    void loadFixedFlagSeq(int trial_no) {
+    void loadFixedFlagSeq(int trial_no)
+    {
         //Load the trial_ind flag sequence in the test suite
         int trial_ind = trial_no - 1; //Trial id starts at 1, but trial index starts at 0;
         flag_seq = suite.trials[trial_ind].getFlagSeq();
     }
-    
+
     // initTrial: Loads targets, zeros metrics and bot indicies, orient the bot to target
     // setup the prev_pos and prev_location vars, then undo done flag to start the next trial.
-    void initTrial() {
+    void initTrial()
+    {
         Debug.Log("Trial " + trial_no + " of " + suite.trials.Count); //Help get a sense of progress
         loadFixedFlagSeq(trial_no);
         resetMetrics();
@@ -194,15 +206,18 @@ public class Bot : MonoBehaviour
     {
         // Test out our reading function
         readTestSuite();
-        if (suite.trials.Count > 75) {
-            if (initTrialNo > 75) {
+        if (suite.trials.Count > 75)
+        {
+            if (initTrialNo > 75)
+            {
                 parts = 2;
                 trial_no = initTrialNo;
             }
-            else {
+            else
+            {
                 parts = 1;
             }
-        } 
+        }
         metricList = new List<Metric>();
         coordRecs = new List<CoordRec>();
         // Set the starting positions
@@ -212,19 +227,23 @@ public class Bot : MonoBehaviour
         initTrial();
     }
 
-    void updateVirtual() {
+    void updateVirtual()
+    {
         // Map the real bot to virtual bot 50 frames per second
         List<decimal> coordinates = new List<decimal>();
         coordinates = gameObject.GetComponent<WorldScript>().real2Virtual(realbot);
-        if (coordinates != null) {
+        if (coordinates != null)
+        {
             virtualbot.position = new Vector3((float)coordinates[0], virtualbot.position.y, (float)coordinates[1]);
         }
     }
 
     void FixedUpdate()
     {
-        if (done) {
-            if (trial_no == suite.trials.Count) {
+        if (done)
+        {
+            if (trial_no == suite.trials.Count)
+            {
                 saveMetrics();
                 saveCoordRec();
                 writeMetrics();
@@ -233,7 +252,9 @@ public class Bot : MonoBehaviour
                 Debug.Log("Finished Writing CRs to File!");
                 Debug.Break(); //Stops running at runtime.
                 return; // Should not reach this line in theory..  
-            } else if (trial_no == 75) {
+            }
+            else if (trial_no == 75)
+            {
                 // Save our Metrics
                 saveMetrics();
                 saveCoordRec();
@@ -254,7 +275,9 @@ public class Bot : MonoBehaviour
                 // Init Trial
                 initTrial();
 
-            } else {
+            }
+            else
+            {
                 //Save our metrics
                 saveMetrics();
                 saveCoordRec();
@@ -267,44 +290,49 @@ public class Bot : MonoBehaviour
                 initTrial();
             }
         }
-        
+
         // dist = Vector3.Distance(virtualbot.position, flags[flag_i].position);
         dist = Vector3.Distance(virtualbot.position, target.position);
         prev_dist = Vector3.Distance(virtualbot.position, prev_pos);
         speed_scale = 1;
-        if ((dist < 0.5f && ind != flag_seq.Count) || dist < 0.01f)
+        if ((dist < 0.2f && ind != flag_seq.Count) || dist < 0.01f)
         {
             optimumPath += Vector3.Distance(prev_location, virtualbot.position);
             prev_location = virtualbot.position;
             prev_pos = virtualbot.position;
             ind += 1;
-            if (ind < flag_seq.Count) {
+            if (ind < flag_seq.Count)
+            {
                 target = flags[flag_seq[ind]];
             }
-            else if (ind == flag_seq.Count) {
+            else if (ind == flag_seq.Count)
+            {
                 // Case where we need to return to center
                 target = center;
             }
-            else if (ind > flag_seq.Count) {
+            else if (ind > flag_seq.Count)
+            {
                 //Terminate current trial...
                 done = true;
                 return;
             }
         }
         // Return to center speed scaling
-        if (dist < 0.9f && ind == flag_seq.Count) {
+        if (dist < 0.9f && ind == flag_seq.Count)
+        {
             speed_scale = dist + 0.1f; //Ensures at least 0.1 sf
         }
         // Normal speed scaling
-        else if (dist < 1.4f || prev_dist < 0.9f)
+        else if (dist < 1.1f || prev_dist < 0.9f)
         {
-            speed_scale = Mathf.Min(dist, prev_dist + 0.5f) - 0.4f;
+            speed_scale = Mathf.Min(dist, prev_dist + 0.2f) - 0.1f;
         }
-        
 
-       // Debug.Log(virtualbot.position.x);
+
+        // Debug.Log(virtualbot.position.x);
         OrientToTarget(); //Orient every single fixed update
-        if (!rotating) {
+        if (!rotating)
+        {
             Move(speed_scale);
             updateVirtual();
         }
@@ -318,68 +346,86 @@ public class Bot : MonoBehaviour
         realbot.Translate(Vector3.forward * speed * speed_scale * Time.fixedDeltaTime);
     }
 
-    float getRotTarget(float diffX, float diffZ) {
+    float getRotTarget(float diffX, float diffZ)
+    {
         //This here figures out the absolute rotation target.
-        
+
         float targetAngle = 0;
 
-        if (diffX > 0 && diffZ > 0) {
+        if (diffX > 0 && diffZ > 0)
+        {
             targetAngle = Mathf.Atan(diffX / diffZ);
         }
-        if (diffX > 0 && diffZ < 0) {
+        if (diffX > 0 && diffZ < 0)
+        {
             targetAngle = Mathf.PI - Mathf.Atan(diffX / -diffZ);
         }
-        if (diffX < 0 && diffZ < 0) {
-            targetAngle = Mathf.PI + Mathf.Atan(diffX/diffZ);
+        if (diffX < 0 && diffZ < 0)
+        {
+            targetAngle = Mathf.PI + Mathf.Atan(diffX / diffZ);
         }
-        if (diffX < 0 && diffZ > 0) {
-            targetAngle = 2f * Mathf.PI - Mathf.Atan(-diffX/diffZ);
+        if (diffX < 0 && diffZ > 0)
+        {
+            targetAngle = 2f * Mathf.PI - Mathf.Atan(-diffX / diffZ);
         }
-        if (diffZ == 0) {
-            if (diffX >= 0) {
+        if (diffZ == 0)
+        {
+            if (diffX >= 0)
+            {
                 targetAngle = Mathf.PI / 2f;
-            } else {
-                targetAngle = - Mathf.PI / 2f;
+            }
+            else
+            {
+                targetAngle = -Mathf.PI / 2f;
             }
         }
         targetAngle *= (180f / Mathf.PI);
-        
+
         return targetAngle;
     }
-    
-    void OrientToTarget() {
-        
+
+    void OrientToTarget()
+    {
+
         // float diffX = flags[flag_i].position.x - virtualbot.position.x;
         // float diffZ = flags[flag_i].position.z - virtualbot.position.z;
 
         float diffX = target.position.x - virtualbot.position.x;
         float diffZ = target.position.z - virtualbot.position.z;
         float maxRot = 5f; //A cap on the rotation per second
-        
+
         float targetAngle = getRotTarget(diffX, diffZ);
         //Debug.Log(targetAngle);
 
         float angleDiff = targetAngle - virtualbot.rotation.eulerAngles.y;
         // Sometimes unfortunately angleDiff can be 360, which freezes the program. Take modulo below.
-        if ((Mathf.Abs(angleDiff) % 360) >= maxRot) {
+        if ((Mathf.Abs(angleDiff) % 360) >= maxRot)
+        {
             rotating = true;
-        } else {
+        }
+        else
+        {
             rotating = false; //Can start moving again.
         }
 
         //Select the most efficient rotation direction
-        if (angleDiff > 180) {
+        if (angleDiff > 180)
+        {
             angleDiff -= 360;
         }
-        if (angleDiff < -180) {
+        if (angleDiff < -180)
+        {
             angleDiff += 360;
         }
 
         // virtualbot.LookAt(flags[flag_i].position);
 
-        if (angleDiff < 0) {
+        if (angleDiff < 0)
+        {
             virtualbot.Rotate(Vector3.up, Mathf.Max(angleDiff, -maxRot));
-        } else {
+        }
+        else
+        {
             virtualbot.Rotate(Vector3.up, Mathf.Min(angleDiff, maxRot));
         }
 
