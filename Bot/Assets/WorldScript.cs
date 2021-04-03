@@ -22,7 +22,7 @@ public class WorldScript : MonoBehaviour
     public bool polygon_manipulation;
     public bool lattice_crushing;
     // public int n;
-    
+
     // Default Values, replaced in script with mesh.
     public float real_width_m;
     public float scale;
@@ -45,23 +45,24 @@ public class WorldScript : MonoBehaviour
 
     void positionObjs()
     {
-        float dist = scale * (real_width_m / 2f - real_width_m * 0.1f); //Distance of Flag
-        for (int i = 0; i < flags.Length; i++) {
-            float x = Mathf.Cos(Mathf.PI/3 * i) * dist;
-            float z = Mathf.Sin(Mathf.PI/3 * i) * dist;
+        float dist = scale * real_width_m / 3f; //Distance of Flag
+        for (int i = 0; i < flags.Length; i++)
+        {
+            float x = Mathf.Cos(Mathf.PI / 3 * i) * dist;
+            float z = Mathf.Sin(Mathf.PI / 3 * i) * dist;
             flags[i].position = new Vector3(x, flags[i].position.y, z);
         }
 
         // Init Plane Positions and Sizes
         float virtual_width = real_width_m * scale / 10f;
         virtualPlane.localScale = new Vector3(virtual_width, 1f, virtual_width);
-        
+
         float real_width = real_width_m / 10f;
         realPlane.localScale = new Vector3(real_width, 1f, real_width);
-        
+
         offsetX = 0.5f * 10f * (real_width + virtual_width);
         offsetZ = 0.5f * 10f * (virtual_width - real_width);
-        
+
         realPlane.position = new Vector3(-offsetX, 0f, -offsetZ);
 
         // Position Bots in Center of spaces
@@ -82,7 +83,7 @@ public class WorldScript : MonoBehaviour
         virtualMesh = new Mesh(virtualM.verts, virtualM.tInd);
 
         //Updates the real_width_m (real space width in metres) from mesh
-        float real_max = (float) realM.getMax();
+        float real_max = (float)realM.getMax();
         real_width_m = real_max * 2f;
         //Updates the scaling factor 
         scale = (float)virtualM.getMax() / real_max;
@@ -91,12 +92,14 @@ public class WorldScript : MonoBehaviour
         gameObject.GetComponent<Bot>().setScale(scale);
     }
 
-    public List<decimal> getVirtualCoord() {
-        return new List<decimal> {(decimal) virtualbot.position.x, (decimal) virtualbot.position.z};
+    public List<decimal> getVirtualCoord()
+    {
+        return new List<decimal> { (decimal)virtualbot.position.x, (decimal)virtualbot.position.z };
     }
-    
-    public List<decimal> getRealCoord() {
-        return new List<decimal> {(decimal) (realbot.position.x + offsetX), (decimal) (realbot.position.z + offsetZ)};
+
+    public List<decimal> getRealCoord()
+    {
+        return new List<decimal> { (decimal)(realbot.position.x + offsetX), (decimal)(realbot.position.z + offsetZ) };
     }
 
     public List<decimal> real2Virtual(Transform pos)
@@ -104,7 +107,7 @@ public class WorldScript : MonoBehaviour
 
         Utils util = new Utils();
         //Add an extra offset here... (NOTE this is not added in V2R)
-        List<decimal> P = new List<decimal> {(decimal)pos.position.x + (decimal)offsetX, (decimal)pos.position.z + (decimal)offsetZ};
+        List<decimal> P = new List<decimal> { (decimal)pos.position.x + (decimal)offsetX, (decimal)pos.position.z + (decimal)offsetZ };
 
         decimal i1, i2;
         //Debug.Log(realMesh.tInd.Count);
@@ -145,7 +148,7 @@ public class WorldScript : MonoBehaviour
                 //Debug.Log(i1);
                 //Debug.Log(i2);  
 
-                return new List<decimal> {i1, i2};
+                return new List<decimal> { i1, i2 };
             }
 
         }
@@ -156,7 +159,7 @@ public class WorldScript : MonoBehaviour
     List<decimal> virtual2Real(Transform pos)
     {
         Utils util = new Utils();
-        List<decimal> P = new List<decimal>{(decimal)pos.position.x, (decimal)pos.position.z};
+        List<decimal> P = new List<decimal> { (decimal)pos.position.x, (decimal)pos.position.z };
 
         foreach (List<int> t in virtualMesh.tInd)
         {
@@ -169,7 +172,7 @@ public class WorldScript : MonoBehaviour
 
             if (util.is_point_in_triangle(P, A, B, C))
             {
-                
+
                 (decimal alpha, decimal beta, decimal gamma) = util.barycentric_coordinates(P, A, B, C);
                 List<decimal> vA, vB, vC;
                 vA = realMesh.verts[t[0]];
@@ -195,6 +198,6 @@ public class WorldScript : MonoBehaviour
             }
         }
         return null;
-    } 
+    }
 
 }

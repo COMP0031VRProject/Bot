@@ -266,8 +266,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   virtualPlane: {fileID: 1325014574}
   realPlane: {fileID: 522699701}
-  virtualJson: {fileID: 4900000, guid: 02dea883f98814b89a0ef2ad26a82a16, type: 3}
-  realJson: {fileID: 4900000, guid: 171cc677daea145eea6b1300f8bf59ce, type: 3}
+  virtualJson: {fileID: 4900000, guid: 397bf4480f8979441bd9e2864251095a, type: 3}
+  realJson: {fileID: 4900000, guid: 4f5c29942ddcc3148b13b98a9636baab, type: 3}
   virtualbot: {fileID: 998156956}
   realbot: {fileID: 854079641}
   birdeyeCamera: {fileID: 963194228}
@@ -281,7 +281,7 @@ MonoBehaviour:
   homogenous: 1
   polygon_manipulation: 0
   lattice_crushing: 0
-  real_width_m: 5
+  real_width_m: 6
   scale: 2
 --- !u!4 &142944726
 Transform:
@@ -322,7 +322,7 @@ MonoBehaviour:
   speed: 1.4
   testJson: {fileID: 4900000, guid: 3df7174058fe341ce83fc403f7cfd38f, type: 3}
   initTrialNo: 1
-  tAcronym: OA
+  tAcronym: PR
 --- !u!1 &321280732
 GameObject:
   m_ObjectHideFlags: 0
